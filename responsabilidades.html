@@ -1,135 +1,274 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsabilidades - Especialista em Segurança da Informação</title>
-  <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Responsabilidades — Segurança da Informação</title>
+  <meta name="description" content="Resumo claro e objetivo das responsabilidades do Especialista em Segurança da Informação." />
+
   <style>
-    :root {
-      --nl-dark: #0B2B40;
-      --nl-mid: #164773;
-      --nl-light: #89D99D;
-      --nl-accent: #3B8C6E;
-      --fg: #e6eef6;
-      --muted: #aeb8bf;
-      --bg-surface: rgba(255,255,255,0.02);
-      --card-shadow: rgba(2,6,23,0.6);
-      --radius: 12px;
-      --max-width: 1200px;
-      --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    :root{
+      --bg:#0B2B40;
+      --mid:#164773;
+      --accent:#3B8C6E;
+      --muted:#aeb8bf;
+      --fg:#e6eef6;
+      --card: rgba(255,255,255,0.03);
+      --glass: rgba(255,255,255,0.02);
+      --radius:12px;
+      --max:1100px;
+      --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
     }
 
-    * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; font-family: var(--font-sans); background: var(--nl-dark); color: var(--fg); }
-    body { line-height: 1.6; }
+    /* Reset / base */
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:inherit;text-decoration:none}
+    .container{width:94%;max-width:var(--max);margin:0 auto;padding:28px 0}
 
-    .container { max-width: var(--max-width); width: 90%; margin: 0 auto; padding: 20px 0; }
+    /* Header (non-sticky) */
+    header{background:linear-gradient(180deg, rgba(11,43,64,0.96), rgba(22,71,115,0.95));border-bottom:1px solid rgba(255,255,255,0.04)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 0;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{width:56px;height:56px;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,0.45)}
+    .brand h1{font-size:1.05rem;margin:0;color:var(--accent);font-weight:700}
+    nav{display:flex;gap:10px;align-items:center}
+    nav a{padding:8px 12px;border-radius:8px;color:var(--muted);font-weight:600;transition:all .18s}
+    nav a:hover, nav a.active{background:rgba(26,79,122,0.12);color:var(--fg)}
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(11,43,64,0.95);
-      padding: 16px 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      position: relative;
+    /* Hero / intro */
+    .hero{padding:34px 0 10px;display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+    .hero-left{flex:1 1 420px;min-width:260px}
+    .hero-left h2{font-size:1.9rem;margin:0 0 10px;color:var(--accent)}
+    .hero-left p{margin:0;color:var(--fg);opacity:.95;line-height:1.6}
+    .hero-right{width:180px;min-width:140px}
+    .hero-illustration{background:var(--card);border-radius:14px;padding:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,0.45)}
+    .hero-illustration svg{width:80%;height:auto;opacity:.95}
+
+    /* grid of responsibility cards */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:26px}
+    .card{background:var(--glass);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.45);transition:transform .18s}
+    .card:hover{transform:translateY(-6px)}
+    .card h3{margin:0 0 8px;color:var(--accent);font-size:1.05rem}
+    .card p{margin:0;color:var(--muted);line-height:1.5;font-size:0.98rem}
+
+    /* detailed list section */
+    .details-list{margin-top:28px;background:transparent}
+    .responsibility{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));padding:18px;border-radius:12px;margin-bottom:14px;box-shadow:0 12px 36px rgba(0,0,0,0.45)}
+    .responsibility h4{margin:0 0 8px;color:var(--accent);font-size:1.05rem}
+    .responsibility p{margin:0;color:var(--fg);line-height:1.6}
+    details{margin-top:12px}
+    summary{cursor:pointer;font-weight:700;color:var(--mid)}
+    summary::-webkit-details-marker{display:none}
+
+    /* aside tips */
+    .two-cols{display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start;margin-top:26px}
+    aside{background:var(--glass);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.45)}
+    aside h4{margin-top:0;color:var(--accent)}
+
+    /* footer */
+    footer{margin-top:34px;padding:26px 0;text-align:center;border-top:1px solid rgba(255,255,255,0.03);color:var(--muted)}
+
+    /* small helpers */
+    .muted{color:var(--muted);font-size:.95rem}
+    .lead{font-size:1rem;color:var(--fg);opacity:.95}
+
+    /* accessible focus */
+    a:focus, button:focus, summary:focus{outline:3px solid rgba(137,217,156,0.18);outline-offset:3px}
+
+    /* reveal animation */
+    .fade-up{opacity:0;transform:translateY(14px);transition:opacity .5s ease, transform .5s cubic-bezier(.2,.9,.3,1)}
+    .fade-up.in{opacity:1;transform:none}
+
+    /* responsive */
+    @media (max-width:900px){
+      .two-cols{grid-template-columns:1fr}
+      .hero-right{order:-1;margin-bottom:12px}
+      .brand h1{font-size:1rem}
     }
-    header .logo img { width: 50px; height: 50px; border-radius: var(--radius); }
-    nav ul { display: flex; list-style: none; margin: 0; padding: 0; }
-    nav li { margin-left: 16px; }
-    nav a { color: var(--fg); text-decoration: none; padding: 6px 12px; border-radius: 6px; transition: 0.3s; }
-    nav a:hover, nav a.active { background: var(--nl-accent); color: #fff; }
-
-    main { padding: 40px 0; }
-    main h1 { text-align: center; color: var(--nl-light); margin-bottom: 20px; }
-    main p { max-width: 900px; margin: 0 auto 30px auto; text-align: center; color: var(--fg); }
-
-    section h2 { color: var(--nl-accent); margin-top: 30px; margin-bottom: 10px; }
-    section p { margin-bottom: 20px; color: var(--fg); }
-
-    .responsibility-card {
-      background: var(--bg-surface);
-      padding: 20px;
-      margin: 20px 0;
-      border-radius: var(--radius);
-      box-shadow: 0 6px 20px var(--card-shadow);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .responsibility-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px var(--card-shadow); }
-
-    footer { text-align: center; padding: 30px 20px; background: rgba(11,43,64,0.9); color: var(--muted); border-top: 1px solid rgba(255,255,255,0.05); }
-
-    @media(max-width: 900px) {
-      nav ul { flex-direction: column; align-items: center; }
-      nav li { margin: 8px 0; }
-    }
-    @media(max-width: 600px) {
-      main h1 { font-size: 1.6rem; }
-      section h2 { font-size: 1.2rem; }
-      section p { font-size: 0.95rem; }
+    @media (max-width:420px){
+      .hero-left h2{font-size:1.4rem}
+      .hero-right{width:120px}
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <img src="imagens/logo.png" alt="Logo Segurança da Informação">
+  <header role="banner" aria-label="Cabeçalho">
+    <div class="header-inner container">
+      <div class="brand">
+        <a href="index.html" aria-label="Voltar para início">
+          <img src="imagens/logo.png" alt="Logotipo">
+        </a>
+        <div>
+          <h1 class="site-title">Especialista em Segurança da Informação</h1>
+          <div class="muted">Responsabilidades</div>
+        </div>
+      </div>
+
+      <nav role="navigation" aria-label="Menu principal">
+        <a href="index.html">Início</a>
+        <a href="responsabilidades.html" class="active" aria-current="page">Responsabilidades</a>
+        <a href="formacao.html">Formação</a>
+        <a href="mercado.html">Mercado</a>
+        <a href="tendencias.html">Tendências</a>
+        <a href="recursos.html">Recursos</a>
+      </nav>
     </div>
-    <nav>
-      <ul>
-        <li><a href="index.html">Início</a></li>
-        <li><a href="responsabilidades.html" class="active">Responsabilidades</a></li>
-        <li><a href="formacao.html">Formação</a></li>
-        <li><a href="mercado.html">Mercado de Trabalho</a></li>
-        <li><a href="tendencias.html">Tendências</a></li>
-        <li><a href="recursos.html">Recursos</a></li>
-      </ul>
-    </nav>
   </header>
 
-  <main class="container">
-    <h1>Responsabilidades de um Especialista em Segurança da Informação</h1>
-    <p>O Especialista em Segurança da Informação protege dados, sistemas e redes contra ameaças digitais. Ele garante confidencialidade, integridade e disponibilidade das informações e orienta a organização sobre políticas de segurança.</p>
+  <main class="container" role="main">
+    <!-- hero -->
+    <section class="hero fade-up" id="intro">
+      <div class="hero-left">
+        <h2>O que faz um Especialista em Segurança da Informação?</h2>
+        <p class="lead">Profissional responsável por proteger ativos digitais (dados, sistemas e redes). Atua prevenindo, detectando e respondendo a incidentes; implementando políticas, controles e treinamentos para reduzir riscos.</p>
+      </div>
 
-    <div class="responsibility-card">
-      <h2>1. Proteção de Dados e Sistemas</h2>
-      <p>Implementar mecanismos de segurança, incluindo criptografia, backups e controle de acessos, garantindo a proteção de informações críticas.</p>
-    </div>
+      <div class="hero-right">
+        <div class="hero-illustration" aria-hidden="true">
+          <!-- Sugestão: trocar o SVG por imagem própria -->
+          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+            <rect x="4" y="10" width="56" height="44" rx="6" fill="#163f5a" />
+            <path d="M16 28h32M16 36h32" stroke="#89d99d" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="48" cy="18" r="6" fill="#3b8c6e"/>
+          </svg>
+        </div>
+      </div>
+    </section>
 
-    <div class="responsibility-card">
-      <h2>2. Análise e Gestão de Riscos</h2>
-      <p>Avaliar vulnerabilidades e ameaças, realizar testes de penetração e auditorias para reduzir riscos e antecipar possíveis ataques.</p>
-    </div>
+    <!-- quick overview cards -->
+    <section class="fade-up" aria-labelledby="overview">
+      <h2 id="overview" style="display:none">Visão geral</h2>
+      <div class="grid" role="list" aria-label="Pilares">
+        <article class="card" role="listitem">
+          <h3>Prevenção</h3>
+          <p>Arquitetura segura, políticas, controles e hardening para reduzir superfície de ataque.</p>
+        </article>
 
-    <div class="responsibility-card">
-      <h2>3. Monitoramento Contínuo</h2>
-      <p>Supervisionar sistemas e redes em tempo real, utilizando ferramentas de monitoramento para detectar atividades suspeitas e prevenir incidentes.</p>
-    </div>
+        <article class="card" role="listitem">
+          <h3>Detecção</h3>
+          <p>Coleta de logs, monitoramento e alertas para identificar comportamentos suspeitos cedo.</p>
+        </article>
 
-    <div class="responsibility-card">
-      <h2>4. Resposta a Incidentes</h2>
-      <p>Planejar e executar ações corretivas em caso de incidentes de segurança, restaurando operações e minimizando impactos.</p>
-    </div>
+        <article class="card" role="listitem">
+          <h3>Resposta</h3>
+          <p>Playbooks, contenção, forense e recuperação para restaurar operações com segurança.</p>
+        </article>
 
-    <div class="responsibility-card">
-      <h2>5. Educação e Treinamento</h2>
-      <p>Capacitar colaboradores sobre boas práticas de segurança, prevenção de ataques cibernéticos e políticas internas da empresa.</p>
-    </div>
+        <article class="card" role="listitem">
+          <h3>Governança</h3>
+          <p>Políticas, conformidade (LGPD/ISO) e gestão de risco alinhada ao negócio.</p>
+        </article>
+      </div>
+    </section>
 
-    <div class="responsibility-card">
-      <h2>6. Políticas, Controles e Conformidade</h2>
-      <p>Estabelecer políticas de autenticação, autorização e auditoria, garantindo conformidade com normas como LGPD e ISO 27001.</p>
-    </div>
+    <!-- details + aside -->
+    <div class="two-cols">
+      <section class="details-list fade-up" aria-labelledby="details-title">
+        <h2 id="details-title" class="muted" style="margin-top:0">Responsabilidades — detalhes práticos</h2>
 
-    <div class="responsibility-card">
-      <h2>7. Implementação de Tecnologias de Segurança</h2>
-      <p>Gerenciar ferramentas como firewalls, antivírus e sistemas de detecção de intrusões para proteger os ativos críticos da organização.</p>
+        <article class="responsibility" id="r1">
+          <h4>Proteção de Dados & Sistemas</h4>
+          <p>Criptografia, segmentação de rede, backups e controles de acesso reduzem risco de exposição.</p>
+          <details>
+            <summary>Exemplos e ferramentas</summary>
+            <ul>
+              <li>Criptografia em trânsito (TLS) e repouso (AES).</li>
+              <li>Controle de acesso (RBAC) e registro de autenticações.</li>
+              <li>Soluções: DLP, WAF, backup off-site.</li>
+            </ul>
+          </details>
+        </article>
+
+        <article class="responsibility" id="r2">
+          <h4>Análise & Gestão de Riscos</h4>
+          <p>Avaliar ativos, probabilidade e impacto para priorizar correções e investimentos.</p>
+          <details><summary>Como começar</summary>
+            <ul>
+              <li>Inventário de ativos e classificação.</li>
+              <li>Matriz de risco simples (probabilidade x impacto).</li>
+            </ul>
+          </details>
+        </article>
+
+        <article class="responsibility" id="r3">
+          <h4>Monitoramento e Detecção</h4>
+          <p>Centralizar logs, criar regras de correlação e rotinas de investigação inicial.</p>
+        </article>
+
+        <article class="responsibility" id="r4">
+          <h4>Resposta a Incidentes & Forense</h4>
+          <p>Ter playbook, cadeia de comunicação e procedimentos de contenção e recuperação.</p>
+        </article>
+
+        <article class="responsibility" id="r5">
+          <h4>Gestão de Vulnerabilidades</h4>
+          <p>Scans, priorização e integração com pipeline de correções (DevOps).</p>
+        </article>
+
+        <article class="responsibility" id="r6">
+          <h4>Identidade e Acesso (IAM)</h4>
+          <p>MFA, revisão periódica de privilégios e automação de provisionamento.</p>
+        </article>
+
+        <article class="responsibility" id="r7">
+          <h4>Educação & Conscientização</h4>
+          <p>Treinamentos, phishing simulado e comunicação contínua geram cultura de segurança.</p>
+        </article>
+      </section>
+
+      <aside class="fade-up" aria-labelledby="tips-title">
+        <h4 id="tips-title">Dicas rápidas</h4>
+        <ul class="muted">
+          <li>Priorize ações por risco — comece pelo que protege dados críticos.</li>
+          <li>Mantenha procedimentos simples e testados (playbooks).</li>
+          <li>Documente decisões e métricas (MTTR, MTTD, % de remediação).</li>
+          <li>Use linguagem acessível ao apresentar para líderes não técnicos.</li>
+        </ul>
+
+        <div style="height:14px"></div>
+
+        <h4>Links úteis</h4>
+        <ul class="muted">
+          <li><a href="recursos.html">Recursos & Ferramentas</a></li>
+          <li><a href="formacao.html">Formação e Certificações</a></li>
+        </ul>
+      </aside>
     </div>
   </main>
 
-  <footer>
-    <p>&copy; 2025 Especialista em Segurança da Informação. Todos os direitos reservados.</p>
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="muted">Resumo baseado em boas práticas e padrões (NIST / ISO / práticas do mercado).</div>
+      <div style="height:8px"></div>
+      <small class="muted">&copy; 2025 — Especialista em Segurança da Informação</small>
+    </div>
   </footer>
+
+  <script>
+    // Pequeno script: reveal on scroll + smooth scroll for internal anchors
+    (function(){
+      // reveal
+      const items = document.querySelectorAll('.fade-up');
+      if('IntersectionObserver' in window){
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+        }, {threshold: .12});
+        items.forEach(i => io.observe(i));
+      } else items.forEach(i => i.classList.add('in'));
+
+      // smooth anchors (for same-page navigation, if used)
+      document.addEventListener('click', function(e){
+        const a = e.target.closest('a[href^="#"]');
+        if(!a) return;
+        const href = a.getAttribute('href');
+        const target = document.querySelector(href);
+        if(!target) return;
+        e.preventDefault();
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    })();
+  </script>
 </body>
 </html>

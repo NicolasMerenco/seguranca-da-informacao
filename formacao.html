@@ -1,159 +1,209 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formação - Especialista em Segurança da Informação</title>
-  <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Formação — Segurança da Informação</title>
+  <meta name="description" content="Resumo claro sobre a formação e certificações de um Especialista em Segurança da Informação." />
+
   <style>
-    :root {
-      --nl-dark: #0B2B40;
-      --nl-mid: #164773;
-      --nl-light: #89D99D;
-      --nl-accent: #3B8C6E;
-      --fg: #e6eef6;
-      --muted: #aeb8bf;
-      --bg-surface: rgba(255,255,255,0.02);
-      --card-shadow: rgba(2,6,23,0.6);
-      --radius: 12px;
-      --max-width: 1200px;
-      --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    :root{
+      --bg:#0B2B40;
+      --mid:#164773;
+      --accent:#3B8C6E;
+      --muted:#aeb8bf;
+      --fg:#e6eef6;
+      --card: rgba(255,255,255,0.03);
+      --glass: rgba(255,255,255,0.02);
+      --radius:12px;
+      --max:1100px;
+      --sans:"Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
     }
 
-    * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; font-family: var(--font-sans); background: var(--nl-dark); color: var(--fg); }
-    body { line-height: 1.6; }
+    /* Reset / base */
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:var(--sans);background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:inherit;text-decoration:none}
+    .container{width:94%;max-width:var(--max);margin:0 auto;padding:28px 0}
 
-    .container { max-width: var(--max-width); width: 90%; margin: 0 auto; padding: 20px 0; }
+    /* Header */
+    header{background:linear-gradient(180deg, rgba(11,43,64,0.96), rgba(22,71,115,0.95));border-bottom:1px solid rgba(255,255,255,0.04)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 0;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{width:56px;height:56px;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,0.45)}
+    .brand h1{font-size:1.05rem;margin:0;color:var(--accent);font-weight:700}
+    nav{display:flex;gap:10px;align-items:center}
+    nav a{padding:8px 12px;border-radius:8px;color:var(--muted);font-weight:600;transition:all .18s}
+    nav a:hover, nav a.active{background:rgba(26,79,122,0.12);color:var(--fg)}
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(11,43,64,0.95);
-      padding: 16px 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    header .logo img { width: 50px; height: 50px; border-radius: var(--radius); }
-    nav ul { display: flex; list-style: none; margin: 0; padding: 0; }
-    nav li { margin-left: 16px; }
-    nav a { color: var(--fg); text-decoration: none; padding: 6px 12px; border-radius: 6px; transition: 0.3s; }
-    nav a:hover, nav a.active { background: var(--nl-accent); color: #fff; }
+    /* hero / intro */
+    .hero{padding:34px 0 10px;display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+    .hero-left{flex:1 1 420px;min-width:260px}
+    .hero-left h2{font-size:1.9rem;margin:0 0 10px;color:var(--accent)}
+    .hero-left p{margin:0;color:var(--fg);opacity:.95;line-height:1.6}
+    .hero-right{width:180px;min-width:140px}
+    .hero-illustration{background:var(--card);border-radius:14px;padding:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,0.45)}
+    .hero-illustration svg{width:80%;height:auto;opacity:.95}
 
-    main { padding: 40px 0; }
-    main h1 { text-align: center; color: var(--nl-light); margin-bottom: 20px; }
-    main p { max-width: 900px; margin: 0 auto 30px auto; text-align: center; color: var(--fg); }
+    /* grid of formation cards */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:26px}
+    .card{background:var(--glass);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.45);transition:transform .18s}
+    .card:hover{transform:translateY(-6px)}
+    .card h3{margin:0 0 8px;color:var(--accent);font-size:1.05rem}
+    .card p{margin:0;color:var(--muted);line-height:1.5;font-size:0.98rem}
+    ul{margin:8px 0 14px 20px;color:var(--muted)}
 
-    section h2 { color: var(--nl-accent); margin-top: 30px; margin-bottom: 10px; }
-    section p { margin-bottom: 20px; color: var(--fg); }
+    /* aside tips */
+    aside{background:var(--glass);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.45);margin-top:26px}
+    aside h4{margin-top:0;color:var(--accent)}
+    .muted{color:var(--muted);font-size:.95rem}
 
-    .formation-card {
-      background: var(--bg-surface);
-      padding: 20px;
-      margin: 20px 0;
-      border-radius: var(--radius);
-      box-shadow: 0 6px 20px var(--card-shadow);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .formation-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px var(--card-shadow); }
+    /* footer */
+    footer{margin-top:34px;padding:26px 0;text-align:center;border-top:1px solid rgba(255,255,255,0.03);color:var(--muted)}
 
-    ul { margin: 10px 0 20px 20px; }
+    /* reveal animation */
+    .fade-up{opacity:0;transform:translateY(14px);transition:opacity .5s ease, transform .5s cubic-bezier(.2,.9,.3,1)}
+    .fade-up.in{opacity:1;transform:none}
 
-    footer { text-align: center; padding: 30px 20px; background: rgba(11,43,64,0.9); color: var(--muted); border-top: 1px solid rgba(255,255,255,0.05); }
-
-    @media(max-width: 900px) {
-      nav ul { flex-direction: column; align-items: center; }
-      nav li { margin: 8px 0; }
-    }
-    @media(max-width: 600px) {
-      main h1 { font-size: 1.6rem; }
-      section h2 { font-size: 1.2rem; }
-      section p, ul li { font-size: 0.95rem; }
-    }
+    @media (max-width:900px){.hero-right{order:-1;margin-bottom:12px}.brand h1{font-size:1rem}}
+    @media (max-width:420px){.hero-left h2{font-size:1.4rem}.hero-right{width:120px}}
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <img src="imagens/logo.png" alt="Logo Segurança da Informação">
+  <header role="banner" aria-label="Cabeçalho">
+    <div class="header-inner container">
+      <div class="brand">
+        <a href="index.html" aria-label="Voltar para início">
+          <img src="imagens/logo.png" alt="Logotipo">
+        </a>
+        <div>
+          <h1 class="site-title">Especialista em Segurança da Informação</h1>
+          <div class="muted">Formação & Certificações</div>
+        </div>
+      </div>
+
+      <nav role="navigation" aria-label="Menu principal">
+        <a href="index.html">Início</a>
+        <a href="responsabilidades.html">Responsabilidades</a>
+        <a href="formacao.html" class="active" aria-current="page">Formação</a>
+        <a href="mercado.html">Mercado</a>
+        <a href="tendencias.html">Tendências</a>
+        <a href="recursos.html">Recursos</a>
+      </nav>
     </div>
-    <nav>
-      <ul>
-        <li><a href="index.html">Início</a></li>
-        <li><a href="responsabilidades.html">Responsabilidades</a></li>
-        <li><a href="formacao.html" class="active">Formação</a></li>
-        <li><a href="mercado.html">Mercado de Trabalho</a></li>
-        <li><a href="tendencias.html">Tendências</a></li>
-        <li><a href="recursos.html">Recursos</a></li>
-      </ul>
-    </nav>
   </header>
 
-  <main class="container">
-    <h1>Formação e Certificações de um Especialista em Segurança da Informação</h1>
+  <main class="container" role="main">
+    <!-- hero -->
+    <section class="hero fade-up" id="intro">
+      <div class="hero-left">
+        <h2>Formação e Certificações</h2>
+        <p class="lead">Base acadêmica, habilidades técnicas, certificações e aprendizado contínuo para se tornar um especialista em segurança da informação de alto nível.</p>
+      </div>
+      <div class="hero-right">
+        <div class="hero-illustration" aria-hidden="true">
+          <!-- Sugestão: trocar o SVG por imagem própria -->
+          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+            <rect x="6" y="10" width="52" height="44" rx="6" fill="#163f5a"/>
+            <path d="M16 28h32M16 36h32" stroke="#89d99d" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="48" cy="18" r="6" fill="#3b8c6e"/>
+          </svg>
+        </div>
+      </div>
+    </section>
 
-    <div class="formation-card">
-      <h2>1. Formação Acadêmica</h2>
-      <p>Para atuar na área de Segurança da Informação, a base acadêmica é essencial. Cursos recomendados:</p>
-      <ul>
-        <li>Ciência da Computação</li>
-        <li>Sistemas de Informação</li>
-        <li>Engenharia da Computação</li>
-        <li>Redes de Computadores</li>
-        <li>Análise e Desenvolvimento de Sistemas</li>
-      </ul>
-    </div>
+    <!-- formation cards -->
+    <section class="fade-up">
+      <div class="grid">
+        <article class="card">
+          <h3>Formação Acadêmica</h3>
+          <p>Base fundamental para atuação profissional.</p>
+          <ul>
+            <li>Ciência da Computação</li>
+            <li>Sistemas de Informação</li>
+            <li>Engenharia da Computação</li>
+            <li>Redes de Computadores</li>
+            <li>Análise e Desenvolvimento de Sistemas</li>
+          </ul>
+        </article>
 
-    <div class="formation-card">
-      <h2>2. Habilidades Técnicas Essenciais</h2>
-      <p>Além da formação acadêmica, desenvolver habilidades técnicas é fundamental:</p>
-      <ul>
-        <li>Administração de redes e servidores</li>
-        <li>Criptografia e segurança de dados</li>
-        <li>Monitoramento de sistemas e análise de logs</li>
-        <li>Detecção e prevenção de ataques cibernéticos</li>
-        <li>Testes de penetração e análise de vulnerabilidades</li>
-      </ul>
-    </div>
+        <article class="card">
+          <h3>Habilidades Técnicas</h3>
+          <p>Conhecimentos aplicáveis no dia a dia da segurança da informação.</p>
+          <ul>
+            <li>Administração de redes e servidores</li>
+            <li>Criptografia e segurança de dados</li>
+            <li>Monitoramento de sistemas e análise de logs</li>
+            <li>Detecção e prevenção de ataques cibernéticos</li>
+            <li>Testes de penetração e análise de vulnerabilidades</li>
+          </ul>
+        </article>
 
-    <div class="formation-card">
-      <h2>3. Certificações Relevantes</h2>
-      <p>Certificações demonstram competência prática e aumentam empregabilidade:</p>
-      <ul>
-        <li><strong>CISSP</strong> (Certified Information Systems Security Professional)</li>
-        <li><strong>CEH</strong> (Certified Ethical Hacker)</li>
-        <li><strong>CompTIA Security+</strong></li>
-        <li><strong>CISM</strong> (Certified Information Security Manager)</li>
-        <li><strong>CCSP</strong> (Certified Cloud Security Professional)</li>
-      </ul>
-    </div>
+        <article class="card">
+          <h3>Certificações</h3>
+          <p>Comprovação prática de habilidades e aumento de empregabilidade.</p>
+          <ul>
+            <li>CISSP</li>
+            <li>CEH</li>
+            <li>CompTIA Security+</li>
+            <li>CISM</li>
+            <li>CCSP</li>
+          </ul>
+        </article>
 
-    <div class="formation-card">
-      <h2>4. Aprendizado Contínuo</h2>
-      <p>A tecnologia e as ameaças cibernéticas evoluem constantemente. Atualizações podem ser feitas através de:</p>
-      <ul>
-        <li>Cursos online e presenciais</li>
-        <li>Webinars e palestras do setor</li>
-        <li>Participação em fóruns e comunidades de cibersegurança</li>
-        <li>Leitura de artigos, white papers e notícias especializadas</li>
-      </ul>
-    </div>
+        <article class="card">
+          <h3>Aprendizado Contínuo</h3>
+          <p>Manter-se atualizado frente à evolução das tecnologias e ameaças.</p>
+          <ul>
+            <li>Cursos online e presenciais</li>
+            <li>Webinars e palestras</li>
+            <li>Fóruns e comunidades de cibersegurança</li>
+            <li>Artigos, white papers e notícias especializadas</li>
+          </ul>
+        </article>
 
-    <div class="formation-card">
-      <h2>5. Soft Skills</h2>
-      <p>Habilidades comportamentais são essenciais para complementar o conhecimento técnico:</p>
-      <ul>
-        <li>Capacidade analítica e pensamento crítico</li>
-        <li>Comunicação clara com equipes e clientes</li>
-        <li>Trabalho em equipe e colaboração</li>
-        <li>Resolução de problemas sob pressão</li>
-        <li>Ética e responsabilidade profissional</li>
+        <article class="card">
+          <h3>Soft Skills</h3>
+          <p>Habilidades comportamentais para complementar o conhecimento técnico.</p>
+          <ul>
+            <li>Pensamento crítico e capacidade analítica</li>
+            <li>Comunicação clara</li>
+            <li>Trabalho em equipe</li>
+            <li>Resolução de problemas sob pressão</li>
+            <li>Ética profissional</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- aside tips -->
+    <aside class="fade-up">
+      <h4>Dicas rápidas</h4>
+      <ul class="muted">
+        <li>Comece pela base acadêmica antes das certificações.</li>
+        <li>Pratique em laboratórios virtuais ou simuladores.</li>
+        <li>Participe de comunidades e grupos de estudo.</li>
+        <li>Atualize-se constantemente em novas tecnologias e ameaças.</li>
       </ul>
-    </div>
+    </aside>
   </main>
 
-  <footer>
-    <p>&copy; 2025 Especialista em Segurança da Informação. Todos os direitos reservados.</p>
+  <footer role="contentinfo">
+    <div class="container">
+      <small class="muted">&copy; 2025 — Especialista em Segurança da Informação</small>
+    </div>
   </footer>
+
+  <script>
+    // reveal on scroll
+    (function(){
+      const items=document.querySelectorAll('.fade-up');
+      if('IntersectionObserver' in window){
+        const io=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')})},{threshold:.12});
+        items.forEach(i=>io.observe(i));
+      } else items.forEach(i=>i.classList.add('in'));
+    })();
+  </script>
 </body>
 </html>
