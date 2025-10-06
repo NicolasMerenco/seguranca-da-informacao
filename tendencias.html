@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tendências - Especialista em Segurança da Informação</title>
+  <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+  <style>
+    :root {
+      --nl-dark: #0B2B40;
+      --nl-mid: #164773;
+      --nl-light: #89D99D;
+      --nl-accent: #3B8C6E;
+      --fg: #e6eef6;
+      --muted: #aeb8bf;
+      --bg-surface: rgba(255,255,255,0.02);
+      --card-shadow: rgba(2,6,23,0.6);
+      --radius: 12px;
+      --max-width: 1200px;
+      --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; font-family: var(--font-sans); background: var(--nl-dark); color: var(--fg); }
+    body { line-height: 1.6; }
+
+    .container { max-width: var(--max-width); width: 90%; margin: 0 auto; padding: 20px 0; }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(11,43,64,0.95);
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    header .logo img { width: 50px; height: 50px; border-radius: var(--radius); }
+    nav ul { display: flex; list-style: none; margin: 0; padding: 0; }
+    nav li { margin-left: 16px; }
+    nav a { color: var(--fg); text-decoration: none; padding: 6px 12px; border-radius: 6px; transition: 0.3s; }
+    nav a:hover, nav a.active { background: var(--nl-accent); color: #fff; }
+
+    main { padding: 40px 0; }
+    main h1 { text-align: center; color: var(--nl-light); margin-bottom: 30px; }
+    main p { max-width: 900px; margin: 0 auto 20px auto; text-align: center; color: var(--fg); }
+
+    section h2 { color: var(--nl-accent); margin-top: 20px; margin-bottom: 10px; }
+    .trend-card {
+      background: var(--bg-surface);
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: var(--radius);
+      box-shadow: 0 6px 20px var(--card-shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .trend-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px var(--card-shadow); }
+
+    footer { text-align: center; padding: 30px 20px; background: rgba(11,43,64,0.9); color: var(--muted); border-top: 1px solid rgba(255,255,255,0.05); }
+
+    @media(max-width: 900px) {
+      nav ul { flex-direction: column; align-items: center; }
+      nav li { margin: 8px 0; }
+    }
+    @media(max-width: 600px) {
+      main h1 { font-size: 1.6rem; }
+      section h2 { font-size: 1.2rem; }
+      section p { font-size: 0.95rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="imagens/logo.png" alt="Logo Segurança da Informação">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="responsabilidades.html">Responsabilidades</a></li>
+        <li><a href="formacao.html">Formação</a></li>
+        <li><a href="mercado.html">Mercado de Trabalho</a></li>
+        <li><a href="tendencias.html" class="active">Tendências</a></li>
+        <li><a href="recursos.html">Recursos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Tendências e Desafios na Segurança da Informação</h1>
+
+    <div class="trend-card">
+      <h2>1. Inteligência Artificial e Machine Learning</h2>
+      <p>O uso de IA e ML permite detectar padrões de ataques, prever vulnerabilidades e automatizar respostas a incidentes de forma proativa.</p>
+    </div>
+
+    <div class="trend-card">
+      <h2>2. Segurança em Nuvem</h2>
+      <p>Com a migração de dados para a nuvem, proteger ambientes em cloud é essencial. Políticas de acesso seguro e monitoramento contínuo são prioritários.</p>
+    </div>
+
+    <div class="trend-card">
+      <h2>3. Internet das Coisas (IoT)</h2>
+      <p>Dispositivos conectados criam novas vulnerabilidades. Estratégias específicas são necessárias para proteger redes IoT e dados sensíveis.</p>
+    </div>
+
+    <div class="trend-card">
+      <h2>4. Cibersegurança como Serviço</h2>
+      <p>Empresas contratam especialistas externos ou soluções SaaS para gerenciar riscos de forma contínua, garantindo resposta rápida a incidentes.</p>
+    </div>
+
+    <div class="trend-card">
+      <h2>5. Normas e Conformidade</h2>
+      <p>Regulamentações como LGPD, GDPR e ISO 27001 exigem políticas rigorosas de proteção e compliance implementadas por especialistas.</p>
+    </div>
+
+    <div class="trend-card">
+      <h2>6. Ataques Sofisticados e Novas Ameaças</h2>
+      <p>Ransomware, phishing avançado e ataques direcionados exigem atualização constante e estratégias proativas de defesa.</p>
+    </div>
+
+    <div class="trend-card">
+      <h2>7. Educação e Conscientização</h2>
+      <p>Capacitar colaboradores e clientes é tão importante quanto a proteção tecnológica, com treinamentos contínuos e campanhas de conscientização.</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Especialista em Segurança da Informação. Todos os direitos reservados.</p>
+  </footer>
+</body>
+</html>

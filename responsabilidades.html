@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsabilidades - Especialista em Segurança da Informação</title>
+  <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+  <style>
+    :root {
+      --nl-dark: #0B2B40;
+      --nl-mid: #164773;
+      --nl-light: #89D99D;
+      --nl-accent: #3B8C6E;
+      --fg: #e6eef6;
+      --muted: #aeb8bf;
+      --bg-surface: rgba(255,255,255,0.02);
+      --card-shadow: rgba(2,6,23,0.6);
+      --radius: 12px;
+      --max-width: 1200px;
+      --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; font-family: var(--font-sans); background: var(--nl-dark); color: var(--fg); }
+    body { line-height: 1.6; }
+
+    .container { max-width: var(--max-width); width: 90%; margin: 0 auto; padding: 20px 0; }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(11,43,64,0.95);
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+    }
+    header .logo img { width: 50px; height: 50px; border-radius: var(--radius); }
+    nav ul { display: flex; list-style: none; margin: 0; padding: 0; }
+    nav li { margin-left: 16px; }
+    nav a { color: var(--fg); text-decoration: none; padding: 6px 12px; border-radius: 6px; transition: 0.3s; }
+    nav a:hover, nav a.active { background: var(--nl-accent); color: #fff; }
+
+    main { padding: 40px 0; }
+    main h1 { text-align: center; color: var(--nl-light); margin-bottom: 20px; }
+    main p { max-width: 900px; margin: 0 auto 30px auto; text-align: center; color: var(--fg); }
+
+    section h2 { color: var(--nl-accent); margin-top: 30px; margin-bottom: 10px; }
+    section p { margin-bottom: 20px; color: var(--fg); }
+
+    .responsibility-card {
+      background: var(--bg-surface);
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: var(--radius);
+      box-shadow: 0 6px 20px var(--card-shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .responsibility-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px var(--card-shadow); }
+
+    footer { text-align: center; padding: 30px 20px; background: rgba(11,43,64,0.9); color: var(--muted); border-top: 1px solid rgba(255,255,255,0.05); }
+
+    @media(max-width: 900px) {
+      nav ul { flex-direction: column; align-items: center; }
+      nav li { margin: 8px 0; }
+    }
+    @media(max-width: 600px) {
+      main h1 { font-size: 1.6rem; }
+      section h2 { font-size: 1.2rem; }
+      section p { font-size: 0.95rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="imagens/logo.png" alt="Logo Segurança da Informação">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="responsabilidades.html" class="active">Responsabilidades</a></li>
+        <li><a href="formacao.html">Formação</a></li>
+        <li><a href="mercado.html">Mercado de Trabalho</a></li>
+        <li><a href="tendencias.html">Tendências</a></li>
+        <li><a href="recursos.html">Recursos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Responsabilidades de um Especialista em Segurança da Informação</h1>
+    <p>O Especialista em Segurança da Informação protege dados, sistemas e redes contra ameaças digitais. Ele garante confidencialidade, integridade e disponibilidade das informações e orienta a organização sobre políticas de segurança.</p>
+
+    <div class="responsibility-card">
+      <h2>1. Proteção de Dados e Sistemas</h2>
+      <p>Implementar mecanismos de segurança, incluindo criptografia, backups e controle de acessos, garantindo a proteção de informações críticas.</p>
+    </div>
+
+    <div class="responsibility-card">
+      <h2>2. Análise e Gestão de Riscos</h2>
+      <p>Avaliar vulnerabilidades e ameaças, realizar testes de penetração e auditorias para reduzir riscos e antecipar possíveis ataques.</p>
+    </div>
+
+    <div class="responsibility-card">
+      <h2>3. Monitoramento Contínuo</h2>
+      <p>Supervisionar sistemas e redes em tempo real, utilizando ferramentas de monitoramento para detectar atividades suspeitas e prevenir incidentes.</p>
+    </div>
+
+    <div class="responsibility-card">
+      <h2>4. Resposta a Incidentes</h2>
+      <p>Planejar e executar ações corretivas em caso de incidentes de segurança, restaurando operações e minimizando impactos.</p>
+    </div>
+
+    <div class="responsibility-card">
+      <h2>5. Educação e Treinamento</h2>
+      <p>Capacitar colaboradores sobre boas práticas de segurança, prevenção de ataques cibernéticos e políticas internas da empresa.</p>
+    </div>
+
+    <div class="responsibility-card">
+      <h2>6. Políticas, Controles e Conformidade</h2>
+      <p>Estabelecer políticas de autenticação, autorização e auditoria, garantindo conformidade com normas como LGPD e ISO 27001.</p>
+    </div>
+
+    <div class="responsibility-card">
+      <h2>7. Implementação de Tecnologias de Segurança</h2>
+      <p>Gerenciar ferramentas como firewalls, antivírus e sistemas de detecção de intrusões para proteger os ativos críticos da organização.</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Especialista em Segurança da Informação. Todos os direitos reservados.</p>
+  </footer>
+</body>
+</html>

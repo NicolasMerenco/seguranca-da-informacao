@@ -5,43 +5,115 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Especialista em Segurança da Informação</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 </head>
 <body>
+
+  <!-- Canvas de partículas de fundo -->
+  <canvas id="backgroundParticles"></canvas>
+
+  <!-- HEADER -->
   <header>
-    <h1>Especialista em Segurança da Informação</h1>
-    <p>Site desenvolvido por Nicolas Merenco para a feira de profissões.</p>
+    <div class="header-inner container">
+      <div class="logo">
+        <img src="imagens/logo.png" alt="Logo da Segurança da Informação">
+        <h1>Especialista em Segurança da Informação</h1>
+      </div>
+      <nav>
+        <a href="responsabilidades.html">Responsabilidades</a>
+        <a href="formacao.html">Formação</a>
+        <a href="mercado.html">Mercado</a>
+        <a href="tendencias.html">Tendências</a>
+        <a href="recursos.html">Recursos</a>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <section id="sobre">
-      <h2>Sobre a profissão</h2>
-      <p>O Especialista em Segurança da Informação é responsável por proteger sistemas, dados e redes de ataques cibernéticos, garantindo confidencialidade, integridade e disponibilidade das informações.</p>
-    </section>
+  <!-- INTRODUÇÃO -->
+  <section id="intro" class="fade-up">
+    <div class="container intro-container">
+      <div class="intro-text">
+        <h1>O que faz um Especialista em Segurança da Informação?</h1>
+        <p>
+          O Especialista em Segurança da Informação protege dados, sistemas e redes de ameaças digitais, garantindo confidencialidade, integridade e disponibilidade das informações. Atua na prevenção, detecção e resposta a incidentes, além de desenvolver políticas de segurança corporativa.
+        </p>
+      </div>
 
-    <section id="habilidades">
-      <h2>Habilidades essenciais</h2>
-      <ul>
-        <li>Segurança de redes</li>
-        <li>Criptografia</li>
-        <li>Auditoria e monitoramento</li>
-        <li>Gestão de vulnerabilidades</li>
-      </ul>
-    </section>
+      <!-- VÍDEO + Canvas de partículas -->
+      <div class="video-wrapper">
+        <canvas id="particles"></canvas>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/WfGMYdalClU" 
+                title="YouTube video player" frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </section>
 
-    <section id="carreira">
-      <h2>Oportunidades de carreira</h2>
-      <p>Profissionais podem atuar em empresas de tecnologia, bancos, órgãos públicos ou consultorias especializadas em cibersegurança.</p>
-    </section>
+  <!-- PILARES DA PROFISSÃO -->
+  <section id="pilares" class="fade-up">
+    <div class="container">
+      <h2 class="section-title">Pilares da Profissão</h2>
+      <div class="icons-section">
+        <div class="icon-card">
+          <img src="imagens/protecao de dados.png" alt="Proteção de Dados">
+          <h3>Proteção de Dados</h3>
+          <p>Garantir que informações importantes estejam seguras.</p>
+        </div>
+        <div class="icon-card">
+          <img src="imagens/redes de sistemas.png" alt="Redes e Sistemas">
+          <h3>Redes e Sistemas</h3>
+          <p>Monitorar e proteger redes corporativas.</p>
+        </div>
+        <div class="icon-card">
+          <img src="imagens/educacao e treinamento.png" alt="Educação e Treinamento">
+          <h3>Educação e Treinamento</h3>
+          <p>Capacitar equipes sobre boas práticas de segurança.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <section id="contato">
-      <h2>Contato</h2>
-      <p>Email: nicolas.mel2601@gmail.com</p>
-    </section>
-  </main>
+  <!-- EXPLORANDO A CARREIRA -->
+  <section id="carreira" class="fade-up">
+    <div class="container">
+      <h2 class="section-title">Explorando a Carreira</h2>
+      <div class="overview-cards">
+        <div class="overview-card">
+          <h3>Responsabilidades</h3>
+          <p>Funções críticas para proteger dados e sistemas.</p>
+          <a href="responsabilidades.html" class="btn">Saiba mais</a>
+        </div>
+        <div class="overview-card">
+          <h3>Formação</h3>
+          <p>Cursos e certificações para se tornar especialista.</p>
+          <a href="formacao.html" class="btn">Saiba mais</a>
+        </div>
+        <div class="overview-card">
+          <h3>Mercado</h3>
+          <p>Oportunidades e crescimento na área de TI e segurança.</p>
+          <a href="mercado.html" class="btn">Saiba mais</a>
+        </div>
+        <div class="overview-card">
+          <h3>Tendências</h3>
+          <p>Novas tecnologias e desafios na cibersegurança.</p>
+          <a href="tendencias.html" class="btn">Saiba mais</a>
+        </div>
+        <div class="overview-card">
+          <h3>Recursos</h3>
+          <p>Sites, cursos e ferramentas essenciais.</p>
+          <a href="recursos.html" class="btn">Saiba mais</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- FOOTER -->
   <footer>
-    <p>&copy; 2025 Nicolas Merenco. Todos os direitos reservados.</p>
+    <div class="container">
+      <p>&copy; 2025 Especialista em Segurança da Informação. Todos os direitos reservados.</p>
+    </div>
   </footer>
 
   <script src="script.js"></script>
