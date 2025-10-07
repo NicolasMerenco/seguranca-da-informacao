@@ -1,113 +1,135 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Especialista em Segurança da Informação</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 </head>
 <body>
 
-  <!-- Canvas de partículas de fundo -->
-  <canvas id="backgroundParticles"></canvas>
+  <!-- Canvas de partículas de fundo (full screen) -->
+  <canvas id="backgroundParticles" aria-hidden="true"></canvas>
 
   <!-- HEADER -->
   <header>
     <div class="header-inner container">
       <div class="logo">
-        <img src="imagens/logo.png" alt="Logo da Segurança da Informação">
+        <img src="imagens/logo.png" alt="Logotipo - Segurança da Informação" />
         <h1>Especialista em Segurança da Informação</h1>
       </div>
-      <nav>
-        <a href="responsabilidades.html">Responsabilidades</a>
-        <a href="formacao.html">Formação</a>
-        <a href="mercado.html">Mercado</a>
-        <a href="tendencias.html">Tendências</a>
-        <a href="recursos.html">Recursos</a>
+
+      <!-- Navegação principal -->
+      <nav id="main-nav" role="navigation" aria-label="Menu principal">
+        <ul id="navList">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="responsabilidades.html">Responsabilidades</a></li>
+          <li><a href="formacao.html">Formação</a></li>
+          <li><a href="mercado.html">Mercado</a></li>
+          <li><a href="tendencias.html">Tendências</a></li>
+          <li><a href="recursos.html">Recursos</a></li>
+        </ul>
       </nav>
     </div>
   </header>
 
-  <!-- INTRODUÇÃO -->
-  <section id="intro" class="fade-up">
-    <div class="container intro-container">
-      <div class="intro-text">
-        <h1>O que faz um Especialista em Segurança da Informação?</h1>
-        <p>
-          O Especialista em Segurança da Informação protege dados, sistemas e redes de ameaças digitais, garantindo confidencialidade, integridade e disponibilidade das informações. Atua na prevenção, detecção e resposta a incidentes, além de desenvolver políticas de segurança corporativa.
-        </p>
-      </div>
+  <!-- MAIN -->
+  <main>
+    <!-- INTRODUÇÃO -->
+    <section id="intro" class="fade-up" aria-labelledby="intro-title">
+      <div class="container intro-container">
+        <div class="intro-text">
+          <h1 id="intro-title">O que faz um Especialista em Segurança da Informação?</h1>
+          <p>
+            O Especialista em Segurança da Informação protege dados, sistemas e redes de ameaças digitais,
+            garantindo confidencialidade, integridade e disponibilidade das informações. Atua na prevenção,
+            detecção e resposta a incidentes, além de desenvolver políticas de segurança corporativa.
+          </p>
+        </div>
 
-      <!-- VÍDEO + Canvas de partículas -->
-      <div class="video-wrapper">
-        <canvas id="particles"></canvas>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/WfGMYdalClU" 
-                title="YouTube video player" frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-  </section>
+        <!-- VÍDEO + Canvas de partículas -->
+        <div class="video-wrapper" role="region" aria-label="Apresentação em vídeo sobre a profissão">
+          <canvas id="particles" aria-hidden="true"></canvas>
 
-  <!-- PILARES DA PROFISSÃO -->
-  <section id="pilares" class="fade-up">
-    <div class="container">
-      <h2 class="section-title">Pilares da Profissão</h2>
-      <div class="icons-section">
-        <div class="icon-card">
-          <img src="imagens/protecao de dados.png" alt="Proteção de Dados">
-          <h3>Proteção de Dados</h3>
-          <p>Garantir que informações importantes estejam seguras.</p>
-        </div>
-        <div class="icon-card">
-          <img src="imagens/redes de sistemas.png" alt="Redes e Sistemas">
-          <h3>Redes e Sistemas</h3>
-          <p>Monitorar e proteger redes corporativas.</p>
-        </div>
-        <div class="icon-card">
-          <img src="imagens/educacao e treinamento.png" alt="Educação e Treinamento">
-          <h3>Educação e Treinamento</h3>
-          <p>Capacitar equipes sobre boas práticas de segurança.</p>
+          <iframe
+            src="https://www.youtube.com/embed/WfGMYdalClU"
+            title="Vídeo — O que faz um especialista em segurança da informação"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- EXPLORANDO A CARREIRA -->
-  <section id="carreira" class="fade-up">
-    <div class="container">
-      <h2 class="section-title">Explorando a Carreira</h2>
-      <div class="overview-cards">
-        <div class="overview-card">
-          <h3>Responsabilidades</h3>
-          <p>Funções críticas para proteger dados e sistemas.</p>
-          <a href="responsabilidades.html" class="btn">Saiba mais</a>
-        </div>
-        <div class="overview-card">
-          <h3>Formação</h3>
-          <p>Cursos e certificações para se tornar especialista.</p>
-          <a href="formacao.html" class="btn">Saiba mais</a>
-        </div>
-        <div class="overview-card">
-          <h3>Mercado</h3>
-          <p>Oportunidades e crescimento na área de TI e segurança.</p>
-          <a href="mercado.html" class="btn">Saiba mais</a>
-        </div>
-        <div class="overview-card">
-          <h3>Tendências</h3>
-          <p>Novas tecnologias e desafios na cibersegurança.</p>
-          <a href="tendencias.html" class="btn">Saiba mais</a>
-        </div>
-        <div class="overview-card">
-          <h3>Recursos</h3>
-          <p>Sites, cursos e ferramentas essenciais.</p>
-          <a href="recursos.html" class="btn">Saiba mais</a>
+    <!-- PILARES DA PROFISSÃO -->
+    <section id="pilares" class="fade-up" aria-labelledby="pilares-title">
+      <div class="container">
+        <h2 id="pilares-title" class="section-title">Pilares da Profissão</h2>
+
+        <div class="icons-section" role="list">
+          <article class="icon-card" role="listitem" aria-labelledby="pillar1">
+            <img src="imagens/protecao de dados.png" alt="Ícone proteção de dados">
+            <h3 id="pillar1">Proteção de Dados</h3>
+            <p>Garantir que informações importantes estejam seguras.</p>
+          </article>
+
+          <article class="icon-card" role="listitem" aria-labelledby="pillar2">
+            <img src="imagens/redes de sistemas.png" alt="Ícone redes e sistemas">
+            <h3 id="pillar2">Redes e Sistemas</h3>
+            <p>Monitorar e proteger redes corporativas.</p>
+          </article>
+
+          <article class="icon-card" role="listitem" aria-labelledby="pillar3">
+            <img src="imagens/educacao e treinamento.png" alt="Ícone educação e treinamento">
+            <h3 id="pillar3">Educação e Treinamento</h3>
+            <p>Capacitar equipes sobre boas práticas de segurança.</p>
+          </article>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <!-- EXPLORANDO A CARREIRA -->
+    <section id="carreira" class="fade-up" aria-labelledby="carreira-title">
+      <div class="container">
+        <h2 id="carreira-title" class="section-title">Explorando a Carreira</h2>
+
+        <div class="overview-cards" role="list">
+          <article class="overview-card" role="listitem" aria-labelledby="c-resp">
+            <h3 id="c-resp">Responsabilidades</h3>
+            <p>Funções críticas para proteger dados e sistemas.</p>
+            <a class="btn" href="responsabilidades.html">Saiba mais</a>
+          </article>
+
+          <article class="overview-card" role="listitem" aria-labelledby="c-form">
+            <h3 id="c-form">Formação</h3>
+            <p>Cursos e certificações para se tornar especialista.</p>
+            <a class="btn" href="formacao.html">Saiba mais</a>
+          </article>
+
+          <article class="overview-card" role="listitem" aria-labelledby="c-merc">
+            <h3 id="c-merc">Mercado</h3>
+            <p>Oportunidades e crescimento na área de TI e segurança.</p>
+            <a class="btn" href="mercado.html">Saiba mais</a>
+          </article>
+
+          <article class="overview-card" role="listitem" aria-labelledby="c-tend">
+            <h3 id="c-tend">Tendências</h3>
+            <p>Novas tecnologias e desafios na cibersegurança.</p>
+            <a class="btn" href="tendencias.html">Saiba mais</a>
+          </article>
+
+          <article class="overview-card" role="listitem" aria-labelledby="c-rec">
+            <h3 id="c-rec">Recursos</h3>
+            <p>Sites, cursos e ferramentas essenciais.</p>
+            <a class="btn" href="recursos.html">Saiba mais</a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <!-- FOOTER -->
   <footer>
