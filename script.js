@@ -283,3 +283,90 @@
     init();
   }
 })();
+
+
+/* ====== MOBILE NAV TOGGLE (cole no final do script.js) ====== */
+(() => {
+  const body = document.body;
+  const header = document.querySelector('header');
+  const container = document.querySelector('.header-inner');
+  if (!header || !container) return;
+
+  // criar botão toggle se não existir (insere antes do nav)
+  let toggle = document.querySelector('.nav-toggle');
+  if (!toggle) {
+    toggle = document.createElement('button');
+    toggle.className = 'nav-toggle';
+    toggle.setAttribute('aria-label', 'Abrir menu');
+    toggle.innerHTML = `<svg width="22" height="14" viewBox="0 0 22 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="22" height="2" rx="1" fill="currentColor"/><rect y="6" width="22" height="2" rx="1" fill="currentColor"/><rect y="12" width="22" height="2" rx="1" fill="currentColor"/></svg>`;
+    // inserir antes do nav
+    const nav = document.querySelector('nav');
+    container.insertBefore(toggle, nav);
+  }
+
+  // criar overlay mobile nav se não existir
+  let mobileNav = document.querySelector('.mobile-nav');
+  if (!mobileNav) {
+    mobileNav = document.createElement('nav');
+    mobileNav.className = 'mobile-nav';
+    mobileNav.setAttribute('aria-label', 'Menu móvel');
+    // clonar o conteúdo do menu desktop (ul)
+    const desktopUl = document.querySelector('#navList');
+    const clone = desktopUl ? desktopUl.cloneNode(true) : document.createElement('ul');
+    // remove bullets / keep structure
+    clone.id = 'mobileNavList';
+    mobileNav.appendChild(clone);
+
+    // close button
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'close-btn';
+    closeBtn.setAttribute('aria-label', 'Fechar menu');
+    closeBtn.innerHTML = '&times;';
+    mobileNav.appendChild(closeBtn);
+
+    document.body.appendChild(mobileNav);
+
+    // close handler
+    closeBtn.addEventListener('click', () => {
+      body.classList.remove('nav-open');
+      toggle.focus();
+    });
+  }
+
+  // toggle open/close
+  toggle.addEventListener('click', () => {
+    if (body.classList.contains('nav-open')) {
+      body.classList.remove('nav-open');
+      toggle.setAttribute('aria-label', 'Abrir menu');
+    } else {
+      body.classList.add('nav-open');
+      toggle.setAttribute('aria-label', 'Fechar menu');
+      // foco no primeiro link do menu para acessibilidade
+      const firstLink = mobileNav.querySelector('a');
+      if (firstLink) firstLink.focus();
+    }
+  });
+
+  // fechar menu ao clicar em um link (mobile)
+  mobileNav.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
+      body.classList.remove('nav-open');
+    }
+  });
+
+  // tecla ESC fecha o menu
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && body.classList.contains('nav-open')) {
+      body.classList.remove('nav-open');
+      toggle.focus();
+    }
+  });
+
+  // garantir que nav desktop reapareça corretamente ao redimensionar
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 880 && body.classList.contains('nav-open')) {
+      body.classList.remove('nav-open');
+    }
+  });
+
+})();
