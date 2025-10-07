@@ -1,357 +1,285 @@
+/* -------------------------
+   script.js - Header fix, offset dinâmico, particles, animações
+   Substitua todo o arquivo atual por este.
+------------------------- */
+
 (() => {
-  const $ = (sel) => document.querySelector(sel);
-  const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+  /* -------------------------
+     SELECTORS E VARIÁVEIS GLOBAIS
+  ------------------------- */
+  const header = document.querySelector('header');
+  const navLinks = document.querySelectorAll('#navList a');
+  const sections = document.querySelectorAll('section[id]');
+  const backToTopBtn = document.getElementById('backToTop');
+  const canvasBg = document.getElementById('backgroundParticles');
+  const canvasVideo = document.getElementById('particles');
+
+  let headerHeight = 0;
+  let lastScrollY = window.scrollY;
+  let ticking = false;
 
   /* -------------------------
-     Smooth scroll para âncoras (apenas hrefs iniciando com #)
+     FUNÇÃO: Atualiza altura do header e aplica padding-top ao body
+     -> evita que o header "coma" o conteúdo
   ------------------------- */
-  document.addEventListener("click", (e) => {
-    const a = e.target.closest("a[href^='#']");
-    if (!a) return;
-    const href = a.getAttribute("href");
-    if (!href || href === "#") return;
-    const el = document.querySelector(href);
-    if (!el) return;
-    e.preventDefault();
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-    setActiveLink(href);
-  });
-
-  /* -------------------------
-     Menu links ativos (scroll spy)
-  ------------------------- */
-  const sections = $$("section[id]");
-  const navLinks = $$("nav a");
-
-  function updateActiveLinkScroll() {
-    if (!sections.length) return; // nada a fazer em páginas sem seções
-    const fromTop = window.scrollY + 120;
-    let current = null;
-    for (let i = 0; i < sections.length; i++) {
-      const s = sections[i];
-      const top = s.offsetTop;
-      const bottom = top + s.offsetHeight;
-      if (top <= fromTop && bottom > fromTop) { current = s; break; }
-    }
-    navLinks.forEach(a => a.classList.remove("active"));
-    if (current) {
-      const id = "#" + current.id;
-      const active = navLinks.find(a => a.getAttribute("href") === id);
-      if (active) active.classList.add("active");
-    }
+  function updateHeaderHeight() {
+    headerHeight = Math.ceil(header.getBoundingClientRect().height);
+    // aplica padding-top ao <main> ou ao body para deslocar o conteúdo
+    const main = document.querySelector('main');
+    if (main) main.style.paddingTop = (headerHeight + 10) + 'px';
+    // define também uma variável CSS (útil para o CSS)
+    document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
   }
 
-  function setActiveLink(href) {
-    navLinks.forEach(a => a.classList.remove("active"));
-    const active = navLinks.find(a => a.getAttribute("href") === href);
-    if (active) active.classList.add("active");
+  /* -------------------------
+     FUNÇÃO: Mostrar / esconder header ao rolar
+     -> comportamento: esconder ao rolar para baixo, mostrar ao rolar para cima
+  ------------------------- */
+  function handleScrollHeader() {
+    const currentY = window.scrollY;
+    // adicionar classe 'scrolled' quando passou um limite (apenas visual)
+    if (currentY > 50) header.classList.add('scrolled');
+    else header.classList.remove('scrolled');
+
+    // esconder em scroll down, mostrar em scroll up (com threshold)
+    const delta = currentY - lastScrollY;
+    if (Math.abs(delta) < 10) { lastScrollY = currentY; return; } // muito pequeno, ignora
+
+    if (delta > 0 && currentY > headerHeight + 80) {
+      // rolando para baixo
+      header.classList.add('hidden'); // CSS -> transform: translateY(-100%)
+    } else {
+      // rolando para cima
+      header.classList.remove('hidden');
+    }
+    lastScrollY = currentY;
   }
 
-  window.addEventListener("scroll", throttle(updateActiveLinkScroll, 100));
-  window.addEventListener("resize", throttle(updateActiveLinkScroll, 300));
-  // roda uma vez após o DOM estar pronto
-  document.addEventListener("DOMContentLoaded", updateActiveLinkScroll);
+  /* -------------------------
+     FUNÇÃO: Active link baseado em scroll (com offset do header)
+  ------------------------- */
+  function activateMenuOnScroll() {
+    const scrollPos = window.scrollY + headerHeight + 12; // considera header
+    sections.forEach(section => {
+      const top = section.offsetTop;
+      const bottom = top + section.offsetHeight;
+      const id = section.getAttribute('id');
+      const link = document.querySelector(`#navList a[href="#${id}"]`);
+      if (!link) return;
+      if (scrollPos >= top && scrollPos < bottom) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
 
   /* -------------------------
-     Fade-up animações com IntersectionObserver (ou fallback)
+     SMOOTH SCROLL PARA LINKS (CONSIDERA HEADER)
   ------------------------- */
-  const fadeElems = $$(".fade-up");
-  if ("IntersectionObserver" in window && fadeElems.length) {
-    const observer = new IntersectionObserver((entries) => {
+  function initSmoothScrollLinks() {
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (!href || !href.startsWith('#')) return; // externo
+        e.preventDefault();
+        const id = href.substring(1);
+        const target = document.getElementById(id);
+        if (!target) return;
+        const top = target.offsetTop - headerHeight - 10;
+        window.scrollTo({ top, behavior: 'smooth' });
+        // em mobile, após clicar, ocultar o header momentaneamente (se estiver visível)
+        header.classList.remove('hidden');
+      });
+    });
+  }
+
+  /* -------------------------
+     BOTÃO VOLTAR AO TOPO (fade in/out)
+  ------------------------- */
+  function initBackToTop() {
+    // mostra/esconde com classe para permitir animação via CSS
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) backToTopBtn.classList.add('visible');
+      else backToTopBtn.classList.remove('visible');
+    });
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  /* -------------------------
+     FADE-UP: IntersectionObserver para revelar seções
+  ------------------------- */
+  function initFadeUp() {
+    const faders = document.querySelectorAll('.fade-up');
+    const obs = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          // pequena aleatoriedade para stagger
-          setTimeout(() => entry.target.classList.add("in"), Math.random() * 200);
+          entry.target.classList.add('in');
+          observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.15 });
-    fadeElems.forEach(el => observer.observe(el));
-  } else {
-    fadeElems.forEach(el => el.classList.add("in"));
+    }, { threshold: 0.18 });
+    faders.forEach(el => obs.observe(el));
   }
 
   /* -------------------------
-     Animação de cards no load (se houver)
+     PARTICULAS OTIMIZADAS - FUNDO
+     Nota: simples, leve, usa requestAnimationFrame e resize handler
   ------------------------- */
-  window.addEventListener("load", () => {
-    const cards = $$(".card, .overview-card, .icon-card");
-    cards.forEach((c, i) => {
-      c.classList.add("fade-up");
-      setTimeout(() => c.classList.add("in"), 150 + i * 60);
-    });
-  });
-
-  /* -------------------------
-     Utilitários: debounce / throttle
-  ------------------------- */
-  function debounce(fn, wait = 100) {
-    let t;
-    return function () {
-      clearTimeout(t);
-      t = setTimeout(() => fn.apply(this, arguments), wait);
-    };
-  }
-  function throttle(fn, wait = 100) {
-    let last = 0;
-    return function () {
-      const now = Date.now();
-      if (now - last >= wait) {
-        last = now;
-        fn.apply(this, arguments);
-      }
-    };
-  }
-
-  /* -------------------------
-     Função utilitária: lê variáveis CSS com fallback
-  ------------------------- */
-  function cssVar(name, fallback) {
-    try {
-      const val = getComputedStyle(document.documentElement).getPropertyValue(name);
-      return val ? val.trim() : fallback;
-    } catch (e) {
-      return fallback;
-    }
-  }
-
-  /* -------------------------
-     Partículas do vídeo (canvas dentro da .video-wrapper)
-     - usa devicePixelRatio corretamente
-     - tolerante à ausência do canvas
-  ------------------------- */
-  (function setupVideoParticles() {
-    const videoCanvas = $("#particles");
-    if (!videoCanvas) return;
-
-    const ctx = videoCanvas.getContext("2d");
-    if (!ctx) return;
-
-    let DPR = window.devicePixelRatio || 1;
-    let W = 0, H = 0;
-    let t = 0;
-    const NUM_PARTICLES = 70;
-    const particles = [];
-    let mouse = { x: -9999, y: -9999 };
-
-    // cor baseada em variável CSS (fallback azul-esverdeado)
-    const particleColorA = cssVar("--particle-video-color", "rgba(59,140,110,0.6)");
-
-    function resizeCanvas() {
-      DPR = window.devicePixelRatio || 1;
-      // clientWidth/clientHeight dão tamanho CSS real (sem DPR)
-      W = Math.max(100, videoCanvas.clientWidth);
-      H = Math.max(60, videoCanvas.clientHeight);
-      videoCanvas.width = Math.round(W * DPR);
-      videoCanvas.height = Math.round(H * DPR);
-      videoCanvas.style.width = W + "px";
-      videoCanvas.style.height = H + "px";
-      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    }
-
-    function createParticle() {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 0.15 + Math.random() * 0.9;
-      const radius = 2 + Math.random() * 10;
-      return {
-        x: Math.random() * W,
-        y: Math.random() * H,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        r: radius,
-        alpha: 0.05 + Math.random() * 0.45
-      };
-    }
-
-    function initParticles() {
-      particles.length = 0;
-      for (let i = 0; i < NUM_PARTICLES; i++) particles.push(createParticle());
-    }
-
-    function drawParticles() {
-      // reduzir chamadas caras: cache length
-      const len = particles.length;
-      for (let i = 0; i < len; i++) {
-        const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-
-        // interação com mouse (se dentro do canvas)
-        const dx = mouse.x - p.x;
-        const dy = mouse.y - p.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist < 120) {
-          const force = (120 - dist) / 120 * 0.0009;
-          p.vx += dx * force;
-          p.vy += dy * force;
-        }
-
-        // wrap-around suave
-        if (p.x < -60) p.x = W + 60;
-        if (p.x > W + 60) p.x = -60;
-        if (p.y < -60) p.y = H + 60;
-        if (p.y > H + 60) p.y = -60;
-
-        // gradiente circular (usa variável CSS para controlar cor)
-        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 2.5);
-        // derivar tons a partir de particleColorA (usamos RGBA fornecida no CSS)
-        // fallback já é um rgba string
-        grad.addColorStop(0, `rgba(255,255,255,${Math.min(0.95, p.alpha + 0.15)})`);
-        grad.addColorStop(0.35, particleColorA.replace(/,[^)]+\)/, `,${Math.max(0.15, p.alpha)})`));
-        grad.addColorStop(1, `rgba(10,42,63,0)`);
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * (0.8 + Math.random() * 0.4), 0, Math.PI * 2);
-        ctx.fill();
-
-        // linhas entre partículas próximas (O(n^2) mas com baixa constante e poucas partículas)
-        for (let j = i + 1; j < len; j++) {
-          const p2 = particles[j];
-          const d = Math.hypot(p.x - p2.x, p.y - p2.y);
-          if (d < 110) {
-            const alphaLine = (0.16 * (110 - d) / 110) * Math.min(1, (p.alpha + p2.alpha));
-            ctx.strokeStyle = `rgba(22,71,115,${alphaLine.toFixed(3)})`;
-            ctx.lineWidth = 0.9;
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.stroke();
-          }
-        }
-      }
-    }
-
-    function drawWave() {
-      ctx.save();
-      ctx.globalCompositeOperation = "lighter";
-      ctx.beginPath();
-      const amp = Math.min(22, H * 0.05);
-      const freq = 0.0045;
-      ctx.moveTo(0, H * 0.65);
-      for (let x = 0; x <= W; x += 16) {
-        const y = H * 0.65 + Math.sin((x * freq) + t * 0.015) * amp;
-        ctx.lineTo(x, y);
-      }
-      ctx.lineTo(W, H);
-      ctx.lineTo(0, H);
-      ctx.closePath();
-      const grad = ctx.createLinearGradient(0, H * 0.55, 0, H);
-      grad.addColorStop(0, "rgba(22,71,115,0.05)");
-      grad.addColorStop(1, "rgba(30,89,89,0.03)");
-      ctx.fillStyle = grad;
-      ctx.fill();
-      ctx.restore();
-    }
-
-    function render() {
-      if (!W || !H) return;
-      ctx.clearRect(0, 0, W, H);
-      drawParticles();
-      drawWave();
-      t++;
-      requestAnimationFrame(render);
-    }
-
-    // eventos do mouse
-    videoCanvas.addEventListener("mousemove", (e) => {
-      const rect = videoCanvas.getBoundingClientRect();
-      mouse.x = (e.clientX - rect.left);
-      mouse.y = (e.clientY - rect.top);
-    });
-    videoCanvas.addEventListener("mouseleave", () => { mouse.x = -9999; mouse.y = -9999; });
-
-    function start() {
-      resizeCanvas();
-      initParticles();
-      // garantir que não haja múltiplos loops ao re-executar
-      requestAnimationFrame(render);
-    }
-
-    window.addEventListener("resize", debounce(() => {
-      // recalcula e reinicia partículas para ajustar densidade se precisar
-      resizeCanvas();
-      initParticles();
-    }, 150));
-
-    // kickoff
-    start();
-  })(); // fim setupVideoParticles
-
-  /* -------------------------
-     Partículas de fundo (canvas full-screen)
-     - também usa devicePixelRatio e variáveis CSS
-  ------------------------- */
-  (function setupBackgroundParticles() {
-    const bgCanvas = $("#backgroundParticles");
-    if (!bgCanvas) return;
-    const ctx = bgCanvas.getContext("2d");
-    if (!ctx) return;
-
-    let DPR = window.devicePixelRatio || 1;
-    let W = window.innerWidth;
-    let H = window.innerHeight;
-    const NUM_PARTICLES = 50;
+  function initBgParticles() {
+    if (!canvasBg) return;
+    const ctx = canvasBg.getContext('2d');
     let particles = [];
+    let W = 0, H = 0;
+    const COUNT = Math.max(40, Math.floor(window.innerWidth / 25)); // escala com largura
 
-    // cores a partir do CSS
-    const particleBgColor = cssVar("--particle-bg", "rgba(22,71,115,0.18)");
-    const particleFillFallback = "rgba(22,71,115,0.12)";
-
-    function resize() {
-      DPR = window.devicePixelRatio || 1;
-      W = window.innerWidth;
-      H = window.innerHeight;
-      bgCanvas.width = Math.round(W * DPR);
-      bgCanvas.height = Math.round(H * DPR);
-      bgCanvas.style.width = W + "px";
-      bgCanvas.style.height = H + "px";
-      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    }
-
-    function init() {
+    function setup() {
+      W = canvasBg.width = window.innerWidth;
+      H = canvasBg.height = window.innerHeight;
       particles = [];
-      for (let i = 0; i < NUM_PARTICLES; i++) {
+      for (let i = 0; i < COUNT; i++) {
         particles.push({
-          x: Math.random() * W,
-          y: Math.random() * H,
-          r: 1 + Math.random() * 3,
-          vx: (Math.random() - 0.5) * 0.25,
-          vy: (Math.random() - 0.5) * 0.25,
-          alpha: 0.04 + Math.random() * 0.25
+          x: Math.random()*W,
+          y: Math.random()*H,
+          r: Math.random()*1.8 + 0.6,
+          vx: (Math.random()-0.5)*0.8,
+          vy: (Math.random()-0.5)*0.8,
+          a: 0.15 + Math.random()*0.5
         });
       }
     }
 
-    function draw() {
-      ctx.clearRect(0, 0, W, H);
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
+    function step() {
+      ctx.clearRect(0,0,W,H);
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(165,167,214,${p.a})`;
+        ctx.fill();
         p.x += p.vx;
         p.y += p.vy;
         if (p.x < -10) p.x = W + 10;
         if (p.x > W + 10) p.x = -10;
         if (p.y < -10) p.y = H + 10;
         if (p.y > H + 10) p.y = -10;
-
-        ctx.beginPath();
-        // tenta usar a variável CSS, senão fallback
-        ctx.fillStyle = particleBgColor || particleFillFallback;
-        ctx.globalAlpha = p.alpha;
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
       }
-      requestAnimationFrame(draw);
+      requestAnimationFrame(step);
     }
 
-    window.addEventListener("resize", debounce(() => {
-      resize();
-      init();
-    }, 120));
+    setup();
+    step();
+    window.addEventListener('resize', () => {
+      // debounce leve
+      clearTimeout(window._bgResizeTimer);
+      window._bgResizeTimer = setTimeout(setup, 120);
+    });
+  }
 
-    // inicializa
-    resize();
+  /* -------------------------
+     PARTICULAS SOBRE O VÍDEO (opcional)
+  ------------------------- */
+  function initVideoParticles() {
+    if (!canvasVideo) return;
+    const ctx = canvasVideo.getContext('2d');
+    let particles = [];
+    let W = 0, H = 0;
+    const COUNT = 28;
+
+    function setup() {
+      W = canvasVideo.width = canvasVideo.offsetWidth || 600;
+      H = canvasVideo.height = canvasVideo.offsetHeight || 340;
+      particles = [];
+      for (let i = 0; i < COUNT; i++) {
+        particles.push({
+          x: Math.random()*W,
+          y: Math.random()*H,
+          r: Math.random()*1.2 + 0.4,
+          vx: (Math.random()-0.5)*0.4,
+          vy: (Math.random()-0.5)*0.4,
+          a: 0.06 + Math.random()*0.35
+        });
+      }
+    }
+
+    function step() {
+      ctx.clearRect(0,0,W,H);
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(160,200,200,${p.a})`;
+        ctx.fill();
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < -10) p.x = W + 10;
+        if (p.x > W + 10) p.x = -10;
+        if (p.y < -10) p.y = H + 10;
+        if (p.y > H + 10) p.y = -10;
+      }
+      requestAnimationFrame(step);
+    }
+
+    setup();
+    step();
+    window.addEventListener('resize', () => {
+      clearTimeout(window._vidResizeTimer);
+      window._vidResizeTimer = setTimeout(setup, 120);
+    });
+  }
+
+  /* -------------------------
+     INICIALIZAÇÃO E EVENTOS PRINCIPAIS
+  ------------------------- */
+  function onScrollMain() {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        handleScrollHeader();
+        activateMenuOnScroll();
+        // optionally other scroll-related things
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  function onResizeMain() {
+    updateHeaderHeight();
+    // re-ativa observadores se necessário
+  }
+
+  function init() {
+    // pequenas segurancas
+    if (!header) return;
+
+    updateHeaderHeight();
+    initSmoothScrollLinks();
+    initBackToTop();
+    initFadeUp();
+    initBgParticles();
+    initVideoParticles();
+
+    // listeners
+    window.addEventListener('scroll', onScrollMain, { passive: true });
+    window.addEventListener('resize', onResizeMain);
+
+    // inicial ativacao de menu (estado inicial)
+    activateMenuOnScroll();
+
+    // accessibility: allow keyboard "Home" quick scroll to top
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Home') window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // remover display none do botão (caso CSS controle via classes)
+    if (backToTopBtn) backToTopBtn.classList.remove('visible');
+    console.log('script.js inicializado com sucesso ✅');
+  }
+
+  // rodar init quando DOM estiver pronto
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
     init();
-    draw();
-  })(); // fim setupBackgroundParticles
-
-})(); // fim IIFE
+  }
+})();
