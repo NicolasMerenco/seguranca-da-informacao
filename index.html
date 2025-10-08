@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,28 +10,29 @@
 
   <!-- Favicon -->
   <link rel="icon" href="imagens/favicon/favicon.ico" type="image/x-icon">
-
 </head>
 <body>
 
   <!-- Canvas para animação de partículas de fundo 
-     - Usado apenas para efeito visual 
-     - Preenchido e animado via JavaScript 
-     - Ignorado por leitores de tela (aria-hidden="true") -->
-<canvas id="backgroundParticles" aria-hidden="true"></canvas>
+       - Usado apenas para efeito visual 
+       - Preenchido e animado via JavaScript 
+       - Ignorado por leitores de tela -->
+  <canvas id="backgroundParticles" aria-hidden="true"></canvas>
 
-    <!-- HEADER -->
-     <header>
-       <div class="header-inner container">
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner container">
       <div class="logo">
-        <img src="imagens/index/logo.png" alt="Logotipo - Especialista de Segurança da Informação" />
+        <a href="index.html" aria-label="Ir para a página inicial">
+          <img src="imagens/index/logo.png" alt="Logotipo - Especialista de Segurança da Informação" />
+        </a>
         <h1>Especialista de Segurança da Informação</h1>
       </div>
 
       <!-- Navegação principal -->
       <nav id="main-nav" role="navigation" aria-label="Menu principal">
         <ul id="navList">
-          <li><a href="index.html">Home</a></li>
+          <!-- Home removido conforme pedido -->
           <li><a href="conteudo/conceitos_&_fundamentos.html">Conceitos & Fundamentos</a></li>
           <li><a href="conteudo/areas_de_atuacao.html">Áreas de Atuação</a></li>
           <li><a href="conteudo/habilidades_&_formacao.html">Habilidades & Formação</a></li>
@@ -44,151 +45,140 @@
   </header>
 
   <!-- MAIN -->
-  <main>
+  <main id="main-content">
+    <!-- INTRODUÇÃO -->
+    <section id="intro" class="fade-up" aria-labelledby="intro-title">
+      <div class="container intro-container">
+        <div class="intro-text">
+          <h1 id="intro-title">O que é um Especialista de Segurança da Informação?</h1>
+          <p>
+            Um Especialista de Segurança da Informação é o profissional responsável por proteger dados, sistemas e redes contra ameaças digitais. 
+            Ele garante que as informações sejam mantidas seguras, confiáveis e disponíveis para quem precisa, aplicando princípios de confidencialidade, 
+            integridade e disponibilidade.
+          </p>
+          <p>
+            Esse especialista atua em diferentes frentes: previne ataques cibernéticos, monitora sistemas, detecta vulnerabilidades e responde rapidamente 
+            a incidentes de segurança. Além disso, cria políticas, procedimentos e boas práticas que ajudam empresas e organizações a reduzir riscos e 
+            manter a confiança de clientes e parceiros.
+          </p>
+          <p>
+            Em um mundo cada vez mais conectado, onde dados digitais são valiosos, o papel desse profissional se torna essencial para proteger 
+            informações estratégicas, financeiras e pessoais, garantindo a continuidade das operações e a segurança de todos os envolvidos.
+          </p>
+        </div>
+      </div>
 
+      <!-- VÍDEO + Canvas de partículas -->
+      <div class="video-wrapper" role="region" aria-label="Apresentação em vídeo sobre a profissão">
+        <!-- Canvas de partículas em background -->
+        <canvas id="particles" aria-hidden="true" class="video-canvas"></canvas>
 
-<!-- INTRODUÇÃO -->
-<section id="intro" class="fade-up" aria-labelledby="intro-title">
-  <div class="container intro-container">
-    <div class="intro-text">
-      <h1 id="intro-title">O que é um Especialista de Segurança da Informação?</h1>
-      <p>
-        Um Especialista de Segurança da Informação é o profissional responsável por proteger dados, sistemas e redes contra ameaças digitais. 
-        Ele garante que as informações sejam mantidas seguras, confiáveis e disponíveis para quem precisa, aplicando princípios de confidencialidade, 
-        integridade e disponibilidade. 
-      </p>
-      <p>
-        Esse especialista atua em diferentes frentes: previne ataques cibernéticos, monitora sistemas, detecta vulnerabilidades e responde rapidamente 
-        a incidentes de segurança. Além disso, cria políticas, procedimentos e boas práticas que ajudam empresas e organizações a reduzir riscos e 
-        manter a confiança de clientes e parceiros.
-      </p>
-      <p>
-        Em um mundo cada vez mais conectado, onde dados digitais são valiosos, o papel desse profissional se torna essencial para proteger 
-        informações estratégicas, financeiras e pessoais, garantindo a continuidade das operações e a segurança de todos os envolvidos.
-      </p>
-    </div>
-  </div>
-  
-<!-- VÍDEO + Canvas de partículas -->
-<div class="video-wrapper" role="region" aria-label="Apresentação em vídeo sobre a profissão">
-  <!-- Canvas de partículas em background -->
-  <canvas id="particles" aria-hidden="true" class="video-canvas"></canvas>
+        <!-- Vídeo responsivo -->
+        <div class="iframe-container">
+          <iframe 
+            src="https://www.youtube.com/embed/mBZBPptSneM?si=sHNbe56fVBtZkHfa" 
+            title="YouTube video player — Especialista de Segurança da Informação" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowfullscreen 
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </section>
 
-  <!-- Vídeo responsivo -->
-  <div class="iframe-container">
-    <iframe 
-      src="https://www.youtube.com/embed/mBZBPptSneM?si=sHNbe56fVBtZkHfa" 
-      title="YouTube video player — Especialista de Segurança da Informação" 
-      frameborder="0" 
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-      allowfullscreen 
-      loading="lazy">
-    </iframe>
-  </div>
-</div>
-</section>
+    <!-- PILARES DA PROFISSÃO -->
+    <section id="pilares" class="fade-up" aria-labelledby="pilares-title">
+      <div class="container">
+        <h2 id="pilares-title" class="section-title">Pilares da Profissão</h2>
 
-<!-- PILARES DA PROFISSÃO -->
-<section id="pilares" class="fade-up" aria-labelledby="pilares-title">
-  <div class="container">
-    <h2 id="pilares-title" class="section-title">Pilares da Profissão</h2>
+        <div class="icons-section" role="list">
+          <article class="icon-card" role="listitem" aria-labelledby="pillar1">
+            <img src="imagens/index/protecao de dados.png" alt="Ícone representando proteção de dados" loading="lazy">
+            <h3 id="pillar1">Proteção de Dados</h3>
+            <p>Garantir que informações confidenciais e sensíveis estejam protegidas contra acessos não autorizados e vazamentos.</p>
+          </article>
 
-    <div class="icons-section" role="list">
-      <!-- Pilar 1 -->
-      <article class="icon-card" role="listitem" aria-labelledby="pillar1">
-        <img src="imagens/index/protecao de dados.png" alt="Ícone representando proteção de dados" loading="lazy">
-        <h3 id="pillar1">Proteção de Dados</h3>
-        <p>Garantir que informações confidenciais e sensíveis estejam protegidas contra acessos não autorizados e vazamentos.</p>
-      </article>
+          <article class="icon-card" role="listitem" aria-labelledby="pillar2">
+            <img src="imagens/index/redes de sistemas.png" alt="Ícone representando redes e sistemas" loading="lazy">
+            <h3 id="pillar2">Redes e Sistemas</h3>
+            <p>Monitorar, administrar e proteger redes corporativas, servidores e sistemas, prevenindo ataques e falhas operacionais.</p>
+          </article>
 
-      <!-- Pilar 2 -->
-      <article class="icon-card" role="listitem" aria-labelledby="pillar2">
-        <img src="imagens/index/redes de sistemas.png" alt="Ícone representando redes e sistemas" loading="lazy">
-        <h3 id="pillar2">Redes e Sistemas</h3>
-        <p>Monitorar, administrar e proteger redes corporativas, servidores e sistemas, prevenindo ataques e falhas operacionais.</p>
-      </article>
+          <article class="icon-card" role="listitem" aria-labelledby="pillar3">
+            <img src="imagens/index/educação e treinamento.png" alt="Ícone representando educação e treinamento" loading="lazy">
+            <h3 id="pillar3">Educação e Treinamento</h3>
+            <p>Capacitar equipes e usuários sobre boas práticas de segurança, políticas internas e prevenção de incidentes.</p>
+          </article>
+        </div>
+      </div>
+    </section>
 
-      <!-- Pilar 3 -->
-      <article class="icon-card" role="listitem" aria-labelledby="pillar3">
-        <img src="imagens/index/educação e treinamento.png" alt="Ícone representando educação e treinamento" loading="lazy">
-        <h3 id="pillar3">Educação e Treinamento</h3>
-        <p>Capacitar equipes e usuários sobre boas práticas de segurança, políticas internas e prevenção de incidentes.</p>
-      </article>
-    </div>
-  </div>
-</section>
+    <!-- EXPLORANDO A CARREIRA -->
+    <section id="carreira" class="fade-up" aria-labelledby="carreira-title">
+      <div class="container">
+        <h2 id="carreira-title" class="section-title">Explorando a Carreira</h2>
 
+        <div class="overview-cards" role="list">
+          <!-- cards... (mantive seu conteúdo) -->
+          <article class="overview-card" role="listitem" aria-labelledby="c-hab">
+            <img src="imagens/index/Ícone de habilidades e formação.png" alt="Ícone de habilidades e formação" loading="lazy">
+            <h3 id="c-hab">Habilidades & Formação</h3>
+            <p>Descubra as competências essenciais e os caminhos de aprendizado para se tornar um especialista em segurança da informação. Inclui técnicas, ferramentas e certificações mais relevantes para o mercado.</p>
+            <a class="btn" href="conteudo/habilidades_&_formacao.html">Saiba mais</a>
+          </article>
 
-<!-- EXPLORANDO A CARREIRA -->
-<section id="carreira" class="fade-up" aria-labelledby="carreira-title">
-  <div class="container">
-    <h2 id="carreira-title" class="section-title">Explorando a Carreira</h2>
+          <!-- ...outros cards mantidos -->
+          <article class="overview-card" role="listitem" aria-labelledby="c-conc">
+            <img src="imagens/index/Ícone de conceitos e fundamentos.png" alt="Ícone de conceitos e fundamentos" loading="lazy">
+            <h3 id="c-conc">Conceitos & Fundamentos</h3>
+            <p>Aprenda os princípios que sustentam toda a segurança da informação, como a tríade CIA (Confidencialidade, Integridade e Disponibilidade), tipos de riscos e ameaças, e boas práticas essenciais para proteger dados e sistemas.</p>
+            <a class="btn" href="conteudo/conceitos_&_fundamentos.html">Saiba mais</a>
+          </article>
 
-    <div class="overview-cards" role="list">
+          <article class="overview-card" role="listitem" aria-labelledby="c-areas">
+            <img src="imagens/index/Ícone de áreas de atuação.png" alt="Ícone de áreas de atuação" loading="lazy">
+            <h3 id="c-areas">Áreas de Atuação</h3>
+            <p>Explore os diversos campos em que um especialista de segurança da informação pode atuar, como SOC, Pentest, Forense Digital, Cloud Security e GRC. Entenda os papéis e responsabilidades de cada área.</p>
+            <a class="btn" href="conteudo/areas_de_atuacao.html">Saiba mais</a>
+          </article>
 
-      <!-- Habilidades & Formação -->
-      <article class="overview-card" role="listitem" aria-labelledby="c-hab">
-        <img src="imagens/index/Ícone de habilidades e formação.png" alt="Ícone de habilidades e formação" loading="lazy">
-        <h3 id="c-hab">Habilidades & Formação</h3>
-        <p>Descubra as competências essenciais e os caminhos de aprendizado para se tornar um especialista em segurança da informação. Inclui técnicas, ferramentas e certificações mais relevantes para o mercado.</p>
-        <a class="btn" href="conteudo/habilidades_&_formacao.html">Saiba mais</a>
-      </article>
+          <article class="overview-card" role="listitem" aria-labelledby="c-normas">
+            <img src="imagens/index/Ícone de normas e leis.png" alt="Ícone de normas e leis" loading="lazy">
+            <h3 id="c-normas">Normas, Leis & Mercado</h3>
+            <p>Conheça as regulamentações e padrões que guiam a profissão, como LGPD e ISO 27001. Além disso, veja o panorama do mercado brasileiro e global, incluindo demanda por profissionais e oportunidades de crescimento.</p>
+            <a class="btn" href="conteudo/normas_&_leis.html">Saiba mais</a>
+          </article>
 
-      <!-- Conceitos & Fundamentos -->
-      <article class="overview-card" role="listitem" aria-labelledby="c-conc">
-        <img src="imagens/index/Ícone de conceitos e fundamentos.png" alt="Ícone de conceitos e fundamentos" loading="lazy">
-        <h3 id="c-conc">Conceitos & Fundamentos</h3>
-        <p>Aprenda os princípios que sustentam toda a segurança da informação, como a tríade CIA (Confidencialidade, Integridade e Disponibilidade), tipos de riscos e ameaças, e boas práticas essenciais para proteger dados e sistemas.</p>
-        <a class="btn" href="conteudo/conceitos_&_fundamentos.html">Saiba mais</a>
-      </article>
+          <article class="overview-card" role="listitem" aria-labelledby="c-processos">
+            <img src="imagens/index/Ícone de processos e entregáveis.png" alt="Ícone de processos e entregáveis" loading="lazy">
+            <h3 id="c-processos">Processos & Entregáveis</h3>
+            <p>Descubra o que um especialista produz no dia a dia: políticas, playbooks, relatórios e métricas que mantêm os sistemas e dados corporativos protegidos. Veja como cada tarefa contribui para a segurança global da organização.</p>
+            <a class="btn" href="conteudo/processos_&_entregaveis.html">Saiba mais</a>
+          </article>
 
-      <!-- Áreas de Atuação -->
-      <article class="overview-card" role="listitem" aria-labelledby="c-areas">
-        <img src="imagens/index/Ícone de áreas de atuação.png" alt="Ícone de áreas de atuação" loading="lazy">
-        <h3 id="c-areas">Áreas de Atuação</h3>
-        <p>Explore os diversos campos em que um especialista de segurança da informação pode atuar, como SOC, Pentest, Forense Digital, Cloud Security e GRC. Entenda os papéis e responsabilidades de cada área.</p>
-        <a class="btn" href="conteudo/areas_de_atuacao.html">Saiba mais</a>
-      </article>
+          <article class="overview-card" role="listitem" aria-labelledby="c-riscos">
+            <img src="imagens/index/Ícone de riscos, desafios e tendências.png" alt="Ícone de riscos, desafios e tendências" loading="lazy">
+            <h3 id="c-riscos">Riscos, Desafios & Tendências</h3>
+            <p>Entenda os principais riscos e dilemas éticos da profissão, bem como as tendências emergentes que moldam o futuro da cibersegurança, incluindo Inteligência Artificial, Zero Trust e escassez de profissionais especializados.</p>
+            <a class="btn" href="conteudo/riscos_&_desafios.html">Saiba mais</a>
+          </article>
 
-      <!-- Normas, Leis & Mercado -->
-      <article class="overview-card" role="listitem" aria-labelledby="c-normas">
-        <img src="imagens/index/Ícone de normas e leis.png" alt="Ícone de normas e leis" loading="lazy">
-        <h3 id="c-normas">Normas, Leis & Mercado</h3>
-        <p>Conheça as regulamentações e padrões que guiam a profissão, como LGPD e ISO 27001. Além disso, veja o panorama do mercado brasileiro e global, incluindo demanda por profissionais e oportunidades de crescimento.</p>
-        <a class="btn" href="conteudo/normas_&_leis.html">Saiba mais</a>
-      </article>
-
-      <!-- Processos & Entregáveis -->
-      <article class="overview-card" role="listitem" aria-labelledby="c-processos">
-        <img src="imagens/index/Ícone de processos e entregáveis.png" alt="Ícone de processos e entregáveis" loading="lazy">
-        <h3 id="c-processos">Processos & Entregáveis</h3>
-        <p>Descubra o que um especialista produz no dia a dia: políticas, playbooks, relatórios e métricas que mantêm os sistemas e dados corporativos protegidos. Veja como cada tarefa contribui para a segurança global da organização.</p>
-        <a class="btn" href="conteudo/processos_&_entregaveis.html">Saiba mais</a>
-      </article>
-
-      <!-- Riscos, Desafios & Tendências -->
-      <article class="overview-card" role="listitem" aria-labelledby="c-riscos">
-        <img src="imagens/index/Ícone de riscos, desafios e tendências.png" alt="Ícone de riscos, desafios e tendências" loading="lazy">
-        <h3 id="c-riscos">Riscos, Desafios & Tendências</h3>
-        <p>Entenda os principais riscos e dilemas éticos da profissão, bem como as tendências emergentes que moldam o futuro da cibersegurança, incluindo Inteligência Artificial, Zero Trust e escassez de profissionais especializados.</p>
-        <a class="btn" href="conteudo/riscos_&_desafios.html">Saiba mais</a>
-      </article>
-
-    </div>
-  </div>
-</section>
+        </div>
+      </div>
+    </section>
   </main>
 
-<!-- FOOTER -->
-<footer>
-  <div class="container">
-    <p>&copy; 2025 Especialista em Segurança da Informação. Todos os direitos reservados.</p>
-  </div>
-</footer>
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Especialista em Segurança da Informação. Todos os direitos reservados.</p>
+    </div>
+  </footer>
 
-<!-- Botão voltar ao topo -->
-<button id="backToTop" title="Voltar ao topo">↑</button>
+  <!-- Botão voltar ao topo -->
+  <button id="backToTop" class="hidden" title="Voltar ao topo" aria-label="Voltar ao topo">↑</button>
 
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

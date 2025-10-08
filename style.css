@@ -55,26 +55,34 @@ header {
   left: 0;
   z-index: 100;
   box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.28s cubic-bezier(.2,.9,.2,1), box-shadow 0.28s ease, background 0.28s ease;
+  will-change: transform;
 }
 header.scrolled {
   background: rgba(7,36,64,0.95);
   box-shadow: 0 6px 18px rgba(0,0,0,0.5);
 }
+header.hidden { transform: translateY(-110%); }
+
 .header-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 16px;
+  min-width: 0;
 }
+
 .logo {
   display: flex;
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+  min-width: 0;
 }
+
 .logo img {
+  flex: 0 0 auto;
   width: 60px;
   height: 60px;
   border-radius: var(--radius);
@@ -82,12 +90,17 @@ header.scrolled {
   transition: transform 0.3s ease;
 }
 .logo img:hover { transform: scale(1.08); }
+
 .logo h1 {
+  flex: 1 1 auto;
+  min-width: 0;
   font-size: clamp(1.2rem, 4vw, 1.8rem);
-  color: var(--color-lighter);
-  white-space: nowrap;
-  text-align: center;
   line-height: 1.2;
+  color: var(--color-lighter);
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
+  margin: 0;
 }
 
 /* MENU */
@@ -97,6 +110,7 @@ nav {
   gap: 14px;
   flex-wrap: wrap;
   justify-content: center;
+  min-width: 0;
 }
 nav a {
   color: var(--color-accent);
@@ -216,7 +230,7 @@ nav a:hover, nav a.active {
 }
 
 /* -------------------------
-   EXPLORANDO A CARREIRA (6 CARDS)
+   EXPLORANDO A CARREIRA
 ------------------------- */
 .overview-cards {
   display: flex;
@@ -305,20 +319,27 @@ footer p {
   position: fixed;
   bottom: 25px;
   right: 25px;
-  background: var(--backtotop-bg);
-  color: var(--fg);
-  border-radius: 50%;
   width: 48px;
   height: 48px;
-  font-size: 1.5rem;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.5rem;
+  background: var(--backtotop-bg);
+  color: var(--fg);
   box-shadow: 0 8px 25px rgba(0,0,0,0.4);
   cursor: pointer;
-  transition: var(--transition);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px) scale(0.98);
+  transition: opacity 220ms ease, transform 220ms ease, visibility 220ms, background 0.3s ease;
   z-index: 1000;
-  display: none;
+}
+#backToTop.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
 }
 #backToTop:hover {
   transform: scale(1.1);
@@ -339,33 +360,6 @@ footer p {
 }
 
 /* -------------------------
-   RESPONSIVIDADE
-------------------------- */
-@media(max-width:1200px){
-  .intro-text h1{ font-size:2.4rem; }
-  .section-title{ font-size:2rem; }
-}
-@media(max-width:992px){
-  .header-inner{ flex-direction: column; gap:16px; }
-  nav{ justify-content:center; flex-wrap: wrap; }
-  nav a{ margin: 6px 8px; padding:6px 10px; }
-  .intro-text p{ font-size:1rem; }
-}
-@media(max-width:768px){
-  .video-wrapper{ max-width:90%; }
-  .icons-section,.overview-cards{gap:25px;}
-}
-@media(max-width:480px){
-  header, .container { padding: 10px; }
-  .intro-text h1{ font-size:1.6rem; }
-  .intro-text p{ font-size:0.95rem; }
-  nav a{ padding:6px 8px; }
-  .section-title{font-size:1.5rem;}
-  .icon-card,.overview-card{padding:20px;}
-}
-@media(min-width:1800px){ body{ font-size:20px; } }
-
-/* -------------------------
    PARTÍCULAS DE FUNDO
 ------------------------- */
 #backgroundParticles {
@@ -379,34 +373,9 @@ footer p {
   background: transparent;
 }
 
-
-/* header hide/show (controlado por JS) */
-header {
-  transition: transform 0.28s cubic-bezier(.2,.9,.2,1), box-shadow 0.28s ease, background 0.28s ease;
-  will-change: transform;
-}
-header.hidden {
-  transform: translateY(-110%);
-}
-
-/* backToTop visibilidade por classe */
-#backToTop {
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(10px) scale(0.98);
-  transition: opacity 220ms ease, transform 220ms ease, visibility 220ms;
-}
-#backToTop.visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0) scale(1);
-}
-
-/* garantir que main tenha offset se JS não rodar (fallback) */
-main { padding-top: var(--header-height, 80px); }
-
-
-/* ====== MOBILE NAV & RESPONSIVE TWEAKS ====== */
+/* =========================
+   MOBILE NAV & RESPONSIVE TWEAKS
+========================= */
 
 /* Remove bullets e organize o <ul> do menu */
 nav ul {
@@ -437,7 +406,7 @@ nav a { display: inline-block; }
 
 /* overlay de menu móvel */
 .mobile-nav {
-  display: none; /* ativado via .nav-open no body */
+  display: none; 
   position: fixed;
   inset: 0;
   background: linear-gradient(180deg, rgba(7,36,64,0.98), rgba(11,68,112,0.98));
@@ -451,9 +420,7 @@ nav a { display: inline-block; }
   display: block;
   padding-top: 8px;
 }
-.mobile-nav li {
-  margin: 18px 0;
-}
+.mobile-nav li { margin: 18px 0; }
 .mobile-nav a {
   font-size: 1.25rem;
   color: var(--color-lighter);
@@ -462,29 +429,9 @@ nav a { display: inline-block; }
 
 /* quando o nav estiver aberto (classe aplicada no <body>) */
 body.nav-open {
-  overflow: hidden; /* evita scroll atrás do menu */
+  overflow: hidden; 
 }
 body.nav-open .mobile-nav { display: block; }
-
-/* esconder nav desktop em telas pequenas e mostrar toggle */
-@media (max-width: 880px) {
-  nav { display: none; }           /* ocultar nav padrão */
-  .nav-toggle { display: flex; }   /* mostrar hamburger */
-  .logo h1 { font-size: 1.2rem; }  /* reduzir título */
-  header { padding: 12px 0; }      /* reduzir header */
-  /* ajustar hero para caber melhor */
-  #intro { padding-top: calc(var(--header-height, 72px) + 12px); }
-  .intro-text h1 { font-size: 1.6rem; line-height:1.15; }
-  .intro-text p { font-size: 0.95rem; }
-  .overview-card, .icon-card { max-width: 95%; padding: 20px; }
-}
-
-/* ajuste extra para telas muito pequenas */
-@media (max-width: 420px) {
-  .mobile-nav a { font-size: 1.05rem; }
-  .logo img { width: 48px; height: 48px; }
-  .overview-card img { width: 64px; height: 64px; }
-}
 
 /* botão "fechar" dentro do overlay */
 .mobile-nav .close-btn {
@@ -497,5 +444,48 @@ body.nav-open .mobile-nav { display: block; }
   font-size: 1.6rem;
 }
 
-/* suaviza transições do header escondido (repetido se necessário) */
-header.hidden { transform: translateY(-110%); transition: transform .25s ease; }
+/* -------------------------
+   RESPONSIVIDADE GERAL
+------------------------- */
+@media(max-width:1200px){
+  .intro-text h1{ font-size:2.4rem; }
+  .section-title{ font-size:2rem; }
+}
+@media(max-width:992px){
+  .header-inner{ flex-direction: column; gap:16px; }
+  nav{ justify-content:center; flex-wrap: wrap; }
+  nav a{ margin: 6px 8px; padding:6px 10px; }
+  .intro-text p{ font-size:1rem; }
+}
+@media(max-width:768px){
+  .video-wrapper{ max-width:90%; }
+  .icons-section,.overview-cards{gap:25px;}
+}
+@media(max-width:480px){
+  header, .container { padding: 10px; }
+  .intro-text h1{ font-size:1.6rem; }
+  .intro-text p{ font-size:0.95rem; }
+  nav a{ padding:6px 8px; }
+  .section-title{font-size:1.5rem;}
+  .icon-card,.overview-card{padding:20px;}
+}
+@media(min-width:1800px){ body{ font-size:20px; } }
+
+/* ajuste extra mobile */
+@media(max-width:740px){
+  .header-inner { flex-direction: column; align-items: center; gap:8px; text-align:center; }
+  .logo { flex-direction: column; align-items: center; gap:6px; }
+  .logo img { width:56px; height:56px; margin:0 auto; }
+  .logo h1 { font-size: clamp(1rem, 5vw, 1.4rem); text-align:center; }
+  nav { display: none; }
+  .nav-toggle { display: flex; }
+  #intro { padding-top: calc(var(--header-height, 72px) + 12px); }
+  .intro-text h1 { font-size: clamp(1.4rem, 5vw, 1.8rem); line-height:1.2; }
+  .intro-text p { font-size:0.95rem; }
+  .overview-card,.icon-card{max-width:95%; padding:20px;}
+}
+@media(max-width:420px){
+  .logo img { width:48px; height:48px; }
+  .overview-card img,.icon-card img{width:64px;height:64px;}
+  .mobile-nav a{font-size:1.05rem;}
+}
