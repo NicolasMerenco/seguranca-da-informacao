@@ -1,372 +1,498 @@
-/* -------------------------
-   script.js - Header fix, offset dinâmico, particles, animações
-   Substitua todo o arquivo atual por este.
-------------------------- */
+/* script.js — Versão refeita, robusta e responsiva
+   Funcionalidades:
+   - calcula e define --header-height (offset seguro)
+   - header scrolled / hide-on-scroll / show-on-scroll
+   - mobile nav (toggle, overlay clone, foco, ESC, clique fora)
+   - smooth scroll (considera header height)
+   - active nav highlighting (IntersectionObserver)
+   - back-to-top button (visível após scroll)
+   - fade-up reveal (IntersectionObserver)
+   - particles init (se existir canvas e support)
+   - respeito a prefers-reduced-motion
+   - proteção contra erros e listeners otimizados (throttle/debounce)
+*/
 
-(() => {
-  /* -------------------------
-     SELECTORS E VARIÁVEIS GLOBAIS
-  ------------------------- */
-  const header = document.querySelector('header');
-  const navLinks = document.querySelectorAll('#navList a');
-  const sections = document.querySelectorAll('section[id]');
-  const backToTopBtn = document.getElementById('backToTop');
-  const canvasBg = document.getElementById('backgroundParticles');
-  const canvasVideo = document.getElementById('particles');
+(function () {
+  'use strict';
 
+  /* ---------- utilitários ---------- */
+  const $ = (s, ctx = document) => ctx.querySelector(s);
+  const $$ = (s, ctx = document) => Array.from(ctx.querySelectorAll(s));
+  const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function throttle(fn, wait = 120) {
+    let last = 0, scheduled = null;
+    return function (...args) {
+      const now = Date.now();
+      const remaining = wait - (now - last);
+      if (remaining <= 0) {
+        if (scheduled) { cancelAnimationFrame(scheduled); scheduled = null; }
+        last = now;
+        fn.apply(this, args);
+      } else if (!scheduled) {
+        scheduled = requestAnimationFrame(() => {
+          last = Date.now();
+          scheduled = null;
+          fn.apply(this, args);
+        });
+      }
+    };
+  }
+
+  function debounce(fn, wait = 120) {
+    let t;
+    return function (...args) {
+      clearTimeout(t);
+      t = setTimeout(() => fn.apply(this, args), wait);
+    };
+  }
+
+  /* ---------- elementos ---------- */
+  const header = $('header');
+  const main = $('main') || document.body;
+  const desktopNav = $('nav'); // nav desktop
+  const desktopNavList = $('#navList');
+  const backToTopBtn = $('#backToTop');
+  const canvasBg = $('#backgroundParticles');
+  const canvasVideo = $('#particles');
+
+  /* variáveis de estado */
   let headerHeight = 0;
-  let lastScrollY = window.scrollY;
+  let lastScrollY = window.scrollY || 0;
   let ticking = false;
 
-  /* -------------------------
-     FUNÇÃO: Atualiza altura do header e aplica padding-top ao body
-     -> evita que o header "coma" o conteúdo
-  ------------------------- */
+  /* ---------- calcula e aplica altura do header (CSS var) ---------- */
   function updateHeaderHeight() {
-    headerHeight = Math.ceil(header.getBoundingClientRect().height);
-    // aplica padding-top ao <main> ou ao body para deslocar o conteúdo
-    const main = document.querySelector('main');
-    if (main) main.style.paddingTop = (headerHeight + 10) + 'px';
-    // define também uma variável CSS (útil para o CSS)
-    document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
+    if (!header) return;
+    const h = Math.ceil(header.getBoundingClientRect().height);
+    headerHeight = h;
+    document.documentElement.style.setProperty('--header-height', `${h}px`);
+    // fallback inline padding-top para main (se desejar)
+    if (main) main.style.paddingTop = `var(--header-height, ${h}px)`;
   }
 
-  /* -------------------------
-     FUNÇÃO: Mostrar / esconder header ao rolar
-     -> comportamento: esconder ao rolar para baixo, mostrar ao rolar para cima
-  ------------------------- */
-  function handleScrollHeader() {
-    const currentY = window.scrollY;
-    // adicionar classe 'scrolled' quando passou um limite (apenas visual)
-    if (currentY > 50) header.classList.add('scrolled');
-    else header.classList.remove('scrolled');
+  /* ---------- mostrar/ocultar header ao rolar ---------- */
+  const SCROLL_DELTA = 12;
+  function handleHeaderOnScroll() {
+    if (!header) return;
+    const currentY = window.scrollY || 0;
 
-    // esconder em scroll down, mostrar em scroll up (com threshold)
+    // adição visual quando passa um ponto
+    if (currentY > 20) header.classList.add('scrolled'); else header.classList.remove('scrolled');
+
+    // hide/show inteligente
     const delta = currentY - lastScrollY;
-    if (Math.abs(delta) < 10) { lastScrollY = currentY; return; } // muito pequeno, ignora
-
-    if (delta > 0 && currentY > headerHeight + 80) {
-      // rolando para baixo
-      header.classList.add('hidden'); // CSS -> transform: translateY(-100%)
-    } else {
-      // rolando para cima
-      header.classList.remove('hidden');
-    }
-    lastScrollY = currentY;
-  }
-
-  /* -------------------------
-     FUNÇÃO: Active link baseado em scroll (com offset do header)
-  ------------------------- */
-  function activateMenuOnScroll() {
-    const scrollPos = window.scrollY + headerHeight + 12; // considera header
-    sections.forEach(section => {
-      const top = section.offsetTop;
-      const bottom = top + section.offsetHeight;
-      const id = section.getAttribute('id');
-      const link = document.querySelector(`#navList a[href="#${id}"]`);
-      if (!link) return;
-      if (scrollPos >= top && scrollPos < bottom) {
-        link.classList.add('active');
+    if (Math.abs(delta) > SCROLL_DELTA) {
+      if (delta > 0 && currentY > headerHeight + 60) {
+        header.classList.add('hidden');
       } else {
-        link.classList.remove('active');
-      }
-    });
-  }
-
-  /* -------------------------
-     SMOOTH SCROLL PARA LINKS (CONSIDERA HEADER)
-  ------------------------- */
-  function initSmoothScrollLinks() {
-    navLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        const href = link.getAttribute('href');
-        if (!href || !href.startsWith('#')) return; // externo
-        e.preventDefault();
-        const id = href.substring(1);
-        const target = document.getElementById(id);
-        if (!target) return;
-        const top = target.offsetTop - headerHeight - 10;
-        window.scrollTo({ top, behavior: 'smooth' });
-        // em mobile, após clicar, ocultar o header momentaneamente (se estiver visível)
         header.classList.remove('hidden');
-      });
-    });
-  }
+      }
+      lastScrollY = currentY;
+    }
 
-  /* -------------------------
-     BOTÃO VOLTAR AO TOPO (fade in/out)
-  ------------------------- */
-  function initBackToTop() {
-    // mostra/esconde com classe para permitir animação via CSS
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 400) backToTopBtn.classList.add('visible');
+    // back to top visibility
+    if (backToTopBtn) {
+      if (currentY > 320) backToTopBtn.classList.add('visible');
       else backToTopBtn.classList.remove('visible');
-    });
-    backToTopBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  /* ---------- active link via IntersectionObserver (mais eficiente) ---------- */
+  function setupActiveSectionObserver() {
+    try {
+      const sections = $$('section[id]');
+      if (!sections.length || !desktopNavList) return;
+
+      const linkMap = new Map();
+      $$('a', desktopNavList).forEach(a => {
+        const href = a.getAttribute('href') || '';
+        const id = href.includes('#') ? href.split('#')[1] : null;
+        if (id) linkMap.set(id, a);
+      });
+
+      // garante que só 1 link fique ativo: quando uma seção está suficientemente visível
+      const observer = new IntersectionObserver((entries) => {
+        // ordena por interseção para escolher o mais visível
+        entries.forEach(entry => {
+          const id = entry.target.id;
+          const link = linkMap.get(id);
+          if (!link) return;
+          if (entry.isIntersecting && entry.intersectionRatio > 0.35) {
+            // remove active de todos e aplica neste
+            linkMap.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+          } else {
+            // se não é intersecting, só remove desta (não limpa todo o mapa)
+            link.classList.remove('active');
+          }
+        });
+      }, { root: null, rootMargin: `-${Math.round(headerHeight * 0.25)}px 0px -40% 0px`, threshold: [0.25, 0.35, 0.6] });
+
+      sections.forEach(s => observer.observe(s));
+    } catch (e) {
+      // fallback leve: ativa por scroll position (mais simples)
+      // console.warn('Active observer failed', e);
+    }
+  }
+
+  /* ---------- smooth scroll para âncoras internas (considera header) ---------- */
+  function initSmoothAnchors() {
+    // usa delegation para pegar todos os links internos, inclusive mobile cloned
+    document.addEventListener('click', function (ev) {
+      const a = ev.target.closest && ev.target.closest('a[href^="#"]');
+      if (!a) return;
+      const href = a.getAttribute('href');
+      if (!href || href === '#') return;
+      const id = href.slice(1);
+      const target = document.getElementById(id);
+      if (!target) return;
+      ev.preventDefault();
+      // calcula posição considerando headerHeight (lê var atual)
+      const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY - headerHeight - 8);
+      if (isReducedMotion) window.scrollTo(0, top);
+      else window.scrollTo({ top, behavior: 'smooth' });
+
+      // se mobile nav estiver aberta, fecha
+      if (document.body.classList.contains('nav-open')) {
+        closeMobileNav();
+      }
+
+      // acessibilidade: colocar foco programático
+      target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
     });
   }
 
-  /* -------------------------
-     FADE-UP: IntersectionObserver para revelar seções
-  ------------------------- */
+  /* ---------- fade-up reveal ---------- */
   function initFadeUp() {
-    const faders = document.querySelectorAll('.fade-up');
-    const obs = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.18 });
-    faders.forEach(el => obs.observe(el));
+    try {
+      const els = $$('.fade-up');
+      if (!els.length) return;
+      const obs = new IntersectionObserver((entries, o) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            o.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.18 });
+      els.forEach(el => obs.observe(el));
+    } catch (e) { /* silently fail */ }
   }
 
-  /* -------------------------
-     PARTICULAS OTIMIZADAS - FUNDO
-     Nota: simples, leve, usa requestAnimationFrame e resize handler
-  ------------------------- */
+  /* ---------- BACK TO TOP ---------- */
+  function initBackToTop() {
+    if (!backToTopBtn) return;
+    backToTopBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (isReducedMotion) window.scrollTo(0, 0);
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
+      // foco em main por accessibilidade
+      if (main) {
+        main.setAttribute('tabindex', '-1');
+        main.focus({ preventScroll: true });
+      }
+    });
+    // teclado
+    backToTopBtn.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') backToTopBtn.click();
+    });
+  }
+
+  /* ---------- PARTICULAS (optimizado) ---------- */
   function initBgParticles() {
-    if (!canvasBg) return;
-    const ctx = canvasBg.getContext('2d');
-    let particles = [];
-    let W = 0, H = 0;
-    const COUNT = Math.max(40, Math.floor(window.innerWidth / 25)); // escala com largura
+    if (!canvasBg || !canvasBg.getContext) return;
+    try {
+      const ctx = canvasBg.getContext('2d');
+      let W = 0, H = 0, particles = [], raf = null;
+      const deviceRatio = Math.max(1, window.devicePixelRatio || 1);
 
-    function setup() {
-      W = canvasBg.width = window.innerWidth;
-      H = canvasBg.height = window.innerHeight;
-      particles = [];
-      for (let i = 0; i < COUNT; i++) {
-        particles.push({
-          x: Math.random()*W,
-          y: Math.random()*H,
-          r: Math.random()*1.8 + 0.6,
-          vx: (Math.random()-0.5)*0.8,
-          vy: (Math.random()-0.5)*0.8,
-          a: 0.15 + Math.random()*0.5
-        });
+      function createParticles() {
+        W = canvasBg.clientWidth * deviceRatio;
+        H = canvasBg.clientHeight * deviceRatio;
+        canvasBg.width = W;
+        canvasBg.height = H;
+        const count = Math.max(20, Math.floor((canvasBg.clientWidth || window.innerWidth) / 30));
+        particles = [];
+        for (let i = 0; i < count; i++) {
+          particles.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: (Math.random() * 1.6 + 0.6) * deviceRatio,
+            vx: (Math.random() - 0.5) * 0.6 * deviceRatio,
+            vy: (Math.random() - 0.5) * 0.6 * deviceRatio,
+            a: 0.12 + Math.random() * 0.5
+          });
+        }
       }
-    }
 
-    function step() {
-      ctx.clearRect(0,0,W,H);
-      for (let p of particles) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-        ctx.fillStyle = `rgba(165,167,214,${p.a})`;
-        ctx.fill();
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < -10) p.x = W + 10;
-        if (p.x > W + 10) p.x = -10;
-        if (p.y < -10) p.y = H + 10;
-        if (p.y > H + 10) p.y = -10;
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        for (const p of particles) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(165,167,214,${Math.max(0, Math.min(1, p.a))})`;
+          ctx.fill();
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < -20) p.x = W + 20;
+          if (p.x > W + 20) p.x = -20;
+          if (p.y < -20) p.y = H + 20;
+          if (p.y > H + 20) p.y = -20;
+        }
+        raf = requestAnimationFrame(draw);
       }
-      requestAnimationFrame(step);
-    }
 
-    setup();
-    step();
-    window.addEventListener('resize', () => {
-      // debounce leve
-      clearTimeout(window._bgResizeTimer);
-      window._bgResizeTimer = setTimeout(setup, 120);
-    });
+      createParticles();
+      draw();
+
+      const onResize = debounce(() => {
+        cancelAnimationFrame(raf);
+        createParticles();
+        draw();
+      }, 140);
+
+      window.addEventListener('resize', onResize, { passive: true });
+
+      // cleanup if needed (not strictly necessary for single page)
+    } catch (e) {
+      // console.warn('bg particles failed', e);
+    }
   }
 
-  /* -------------------------
-     PARTICULAS SOBRE O VÍDEO (opcional)
-  ------------------------- */
   function initVideoParticles() {
-    if (!canvasVideo) return;
-    const ctx = canvasVideo.getContext('2d');
-    let particles = [];
-    let W = 0, H = 0;
-    const COUNT = 28;
-
-    function setup() {
-      W = canvasVideo.width = canvasVideo.offsetWidth || 600;
-      H = canvasVideo.height = canvasVideo.offsetHeight || 340;
-      particles = [];
-      for (let i = 0; i < COUNT; i++) {
-        particles.push({
-          x: Math.random()*W,
-          y: Math.random()*H,
-          r: Math.random()*1.2 + 0.4,
-          vx: (Math.random()-0.5)*0.4,
-          vy: (Math.random()-0.5)*0.4,
-          a: 0.06 + Math.random()*0.35
-        });
+    if (!canvasVideo || !canvasVideo.getContext) return;
+    try {
+      const ctx = canvasVideo.getContext('2d');
+      let W = 0, H = 0, particles = [], raf = null;
+      function create() {
+        W = Math.round(canvasVideo.clientWidth);
+        H = Math.round(canvasVideo.clientHeight);
+        canvasVideo.width = W;
+        canvasVideo.height = H;
+        particles = [];
+        const count = Math.max(12, Math.floor((W * H) / (30000)));
+        for (let i = 0; i < count; i++) {
+          particles.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: Math.random() * 1.2 + 0.3,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            a: 0.04 + Math.random() * 0.35
+          });
+        }
       }
-    }
-
-    function step() {
-      ctx.clearRect(0,0,W,H);
-      for (let p of particles) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-        ctx.fillStyle = `rgba(160,200,200,${p.a})`;
-        ctx.fill();
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < -10) p.x = W + 10;
-        if (p.x > W + 10) p.x = -10;
-        if (p.y < -10) p.y = H + 10;
-        if (p.y > H + 10) p.y = -10;
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        for (const p of particles) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(160,200,200,${p.a})`;
+          ctx.fill();
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < -10) p.x = W + 10;
+          if (p.x > W + 10) p.x = -10;
+          if (p.y < -10) p.y = H + 10;
+          if (p.y > H + 10) p.y = -10;
+        }
+        raf = requestAnimationFrame(draw);
       }
-      requestAnimationFrame(step);
+      create();
+      draw();
+      window.addEventListener('resize', debounce(() => {
+        cancelAnimationFrame(raf);
+        create();
+        draw();
+      }, 140), { passive: true });
+    } catch (e) {
+      // console.warn('video particles failed', e);
     }
-
-    setup();
-    step();
-    window.addEventListener('resize', () => {
-      clearTimeout(window._vidResizeTimer);
-      window._vidResizeTimer = setTimeout(setup, 120);
-    });
   }
 
-  /* -------------------------
-     INICIALIZAÇÃO E EVENTOS PRINCIPAIS
-  ------------------------- */
-  function onScrollMain() {
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        handleScrollHeader();
-        activateMenuOnScroll();
-        // optionally other scroll-related things
-        ticking = false;
+  /* ---------- MOBILE NAV (cria toggle + overlay se não existir) ---------- */
+  let navToggle = $('.nav-toggle');
+  let mobileNav = $('.mobile-nav');
+
+  function createMobileNavIfNeeded() {
+    const headerInner = $('.header-inner');
+    if (!headerInner) return;
+
+    // cria botão toggle se não existir
+    if (!navToggle) {
+      navToggle = document.createElement('button');
+      navToggle.className = 'nav-toggle';
+      navToggle.type = 'button';
+      navToggle.setAttribute('aria-label', 'Abrir menu');
+      navToggle.setAttribute('aria-expanded', 'false');
+      navToggle.innerHTML = `<svg width="22" height="14" viewBox="0 0 22 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="22" height="2" rx="1" fill="currentColor"/><rect y="6" width="22" height="2" rx="1" fill="currentColor"/><rect y="12" width="22" height="2" rx="1" fill="currentColor"/></svg>`;
+      // inserir antes do nav (se existir) ou ao final do headerInner
+      const navEl = $('nav');
+      if (navEl) headerInner.insertBefore(navToggle, navEl);
+      else headerInner.appendChild(navToggle);
+    }
+
+    // cria overlay mobileNav se não existir (clona ul)
+    if (!mobileNav) {
+      mobileNav = document.createElement('nav');
+      mobileNav.className = 'mobile-nav';
+      mobileNav.setAttribute('aria-label', 'Menu móvel');
+      mobileNav.setAttribute('id', 'mobile-nav');
+
+      // clona lista do desktop
+      const desktopUl = $('#navList');
+      const clone = desktopUl ? desktopUl.cloneNode(true) : document.createElement('ul');
+      clone.id = 'mobileNavList';
+      mobileNav.appendChild(clone);
+
+      // close btn
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'close-btn';
+      closeBtn.setAttribute('aria-label', 'Fechar menu');
+      closeBtn.innerHTML = '&times;';
+      mobileNav.appendChild(closeBtn);
+
+      document.body.appendChild(mobileNav);
+
+      // eventos do overlay
+      closeBtn.addEventListener('click', () => {
+        closeMobileNav();
+        navToggle.focus();
       });
-      ticking = true;
+
+      // click em links fecha
+      mobileNav.addEventListener('click', (ev) => {
+        const a = ev.target.closest && ev.target.closest('a');
+        if (!a) return;
+        document.body.classList.remove('nav-open');
+      });
     }
   }
 
-  function onResizeMain() {
-    updateHeaderHeight();
-    // re-ativa observadores se necessário
+  function openMobileNav() {
+    document.body.classList.add('nav-open');
+    document.documentElement.style.overflow = 'hidden';
+    if (navToggle) navToggle.setAttribute('aria-expanded', 'true');
+    // foco no primeiro link
+    const firstLink = mobileNav && mobileNav.querySelector('a');
+    if (firstLink) firstLink.focus();
+  }
+  function closeMobileNav() {
+    document.body.classList.remove('nav-open');
+    document.documentElement.style.overflow = '';
+    if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
+  }
+  function toggleMobileNav() {
+    if (document.body.classList.contains('nav-open')) closeMobileNav();
+    else openMobileNav();
   }
 
+  /* fechar mobile nav se clicar fora (overlay) */
+  function clickOutsideToClose(e) {
+    if (!document.body.classList.contains('nav-open')) return;
+    if (!mobileNav) return;
+    if (mobileNav.contains(e.target)) return;
+    if (navToggle && navToggle.contains(e.target)) return;
+    closeMobileNav();
+  }
+
+  /* ---------- inicialização geral ---------- */
   function init() {
-    // pequenas segurancas
     if (!header) return;
 
+    // setup
     updateHeaderHeight();
-    initSmoothScrollLinks();
+    createMobileNavIfNeeded();
+    initSmoothAnchors();
+    initSmoothAnchors = initSmoothAnchors; // keep linter happy if referenced
     initBackToTop();
     initFadeUp();
     initBgParticles();
     initVideoParticles();
+    setupActiveSectionObserver();
 
-    // listeners
-    window.addEventListener('scroll', onScrollMain, { passive: true });
-    window.addEventListener('resize', onResizeMain);
+    // eventos otimizado
+    window.addEventListener('scroll', throttle(() => {
+      handleHeaderOnScroll();
+    }, 100), { passive: true });
 
-    // inicial ativacao de menu (estado inicial)
-    activateMenuOnScroll();
+    window.addEventListener('resize', debounce(() => {
+      updateHeaderHeight();
+      // se o menu mobile estiver aberto e aumentou largura, fechar
+      if (window.innerWidth > 880 && document.body.classList.contains('nav-open')) {
+        closeMobileNav();
+      }
+    }, 150), { passive: true });
 
-    // accessibility: allow keyboard "Home" quick scroll to top
+    // delegation: close mobile if click outside
+    document.addEventListener('click', clickOutsideToClose, { passive: true });
+
+    // keyboard: ESC fecha mobile nav; Home tecla leva ao topo
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Home') window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (e.key === 'Escape' && document.body.classList.contains('nav-open')) {
+        closeMobileNav();
+        if (navToggle) navToggle.focus();
+      }
+      if (e.key === 'Home') {
+        if (isReducedMotion) window.scrollTo(0, 0);
+        else window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     });
 
-    // remover display none do botão (caso CSS controle via classes)
-    if (backToTopBtn) backToTopBtn.classList.remove('visible');
-    console.log('script.js inicializado com sucesso ✅');
+    // navToggle events
+    if (navToggle) {
+      navToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleMobileNav();
+      });
+    }
+
+    // assegura que backToTop esteja acessível via teclado
+    if (backToTopBtn) backToTopBtn.setAttribute('aria-label', backToTopBtn.getAttribute('title') || 'Voltar ao topo');
+
+    // ativa estado inicial de active link (fallback)
+    handleHeaderOnScroll();
+
+    // safe init de funções externas (ex.: particles libs)
+    if (typeof initParticles === 'function') {
+      try { initParticles(); } catch (e) { /* ignore */ }
+    }
+
+    // log opcional
+    // console.log('script.js inicializado');
   }
 
-  // rodar init quando DOM estiver pronto
+  /* ---------- pequenas ligações: smooth anchors (separado porque usado dentro) ---------- */
+  function initSmoothAnchors() {
+    // já implementado acima? usamos delegation aqui
+    document.addEventListener('click', function (ev) {
+      const a = ev.target.closest && ev.target.closest('a[href^="#"]');
+      if (!a) return;
+      const href = a.getAttribute('href');
+      if (!href || href === '#') return;
+      const id = href.slice(1);
+      const target = document.getElementById(id);
+      if (!target) return;
+      ev.preventDefault();
+      const rect = target.getBoundingClientRect();
+      const top = Math.max(0, rect.top + window.scrollY - headerHeight - 8);
+      if (isReducedMotion) window.scrollTo(0, top);
+      else window.scrollTo({ top, behavior: 'smooth' });
+      // close mobile nav if open
+      if (document.body.classList.contains('nav-open')) closeMobileNav();
+      // focus target for a11y
+      target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+    });
+  }
+
+  // inicializa quando DOM pronto
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
   }
-})();
-
-
-/* ====== MOBILE NAV TOGGLE (cole no final do script.js) ====== */
-(() => {
-  const body = document.body;
-  const header = document.querySelector('header');
-  const container = document.querySelector('.header-inner');
-  if (!header || !container) return;
-
-  // criar botão toggle se não existir (insere antes do nav)
-  let toggle = document.querySelector('.nav-toggle');
-  if (!toggle) {
-    toggle = document.createElement('button');
-    toggle.className = 'nav-toggle';
-    toggle.setAttribute('aria-label', 'Abrir menu');
-    toggle.innerHTML = `<svg width="22" height="14" viewBox="0 0 22 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="22" height="2" rx="1" fill="currentColor"/><rect y="6" width="22" height="2" rx="1" fill="currentColor"/><rect y="12" width="22" height="2" rx="1" fill="currentColor"/></svg>`;
-    // inserir antes do nav
-    const nav = document.querySelector('nav');
-    container.insertBefore(toggle, nav);
-  }
-
-  // criar overlay mobile nav se não existir
-  let mobileNav = document.querySelector('.mobile-nav');
-  if (!mobileNav) {
-    mobileNav = document.createElement('nav');
-    mobileNav.className = 'mobile-nav';
-    mobileNav.setAttribute('aria-label', 'Menu móvel');
-    // clonar o conteúdo do menu desktop (ul)
-    const desktopUl = document.querySelector('#navList');
-    const clone = desktopUl ? desktopUl.cloneNode(true) : document.createElement('ul');
-    // remove bullets / keep structure
-    clone.id = 'mobileNavList';
-    mobileNav.appendChild(clone);
-
-    // close button
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'close-btn';
-    closeBtn.setAttribute('aria-label', 'Fechar menu');
-    closeBtn.innerHTML = '&times;';
-    mobileNav.appendChild(closeBtn);
-
-    document.body.appendChild(mobileNav);
-
-    // close handler
-    closeBtn.addEventListener('click', () => {
-      body.classList.remove('nav-open');
-      toggle.focus();
-    });
-  }
-
-  // toggle open/close
-  toggle.addEventListener('click', () => {
-    if (body.classList.contains('nav-open')) {
-      body.classList.remove('nav-open');
-      toggle.setAttribute('aria-label', 'Abrir menu');
-    } else {
-      body.classList.add('nav-open');
-      toggle.setAttribute('aria-label', 'Fechar menu');
-      // foco no primeiro link do menu para acessibilidade
-      const firstLink = mobileNav.querySelector('a');
-      if (firstLink) firstLink.focus();
-    }
-  });
-
-  // fechar menu ao clicar em um link (mobile)
-  mobileNav.addEventListener('click', (e) => {
-    if (e.target.tagName === 'A') {
-      body.classList.remove('nav-open');
-    }
-  });
-
-  // tecla ESC fecha o menu
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && body.classList.contains('nav-open')) {
-      body.classList.remove('nav-open');
-      toggle.focus();
-    }
-  });
-
-  // garantir que nav desktop reapareça corretamente ao redimensionar
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 880 && body.classList.contains('nav-open')) {
-      body.classList.remove('nav-open');
-    }
-  });
 
 })();
